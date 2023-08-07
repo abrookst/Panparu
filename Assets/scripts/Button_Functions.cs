@@ -8,19 +8,13 @@ public class Button_Functions : MonoBehaviour
 {
 
     [SerializeField] private GameObject clock;
+    [SerializeField] private GameObject food;
 
     //Get button references
     [SerializeField] private Button FeedButton;
     [SerializeField] private Button PetButton;
     [SerializeField] private Button PlayButton;
     [SerializeField] private Button TimeButton;
-    
-
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
 
     // Update is called once per frame
     public void ToggleTime()
@@ -37,9 +31,7 @@ public class Button_Functions : MonoBehaviour
         PlayButton.interactable = false;
         TimeButton.interactable = false;
 
-        //Create blank UI image
-        GameObject image = new("Food", typeof(RectTransform), typeof(Image));
-        image.transform.SetParent(GameObject.Find("Canvas").transform);
+        food.SetActive(true);
         
         //Play rotate animation on Panparu
         Panparu.Instance.GetComponent<Animator>().SetTrigger("Feed");
@@ -47,7 +39,7 @@ public class Button_Functions : MonoBehaviour
 
         Panparu.Instance.Feed();
 
-        Destroy(image);
+        food.SetActive(false);
 
         FeedButton.interactable = true;
         PetButton.interactable = true;
