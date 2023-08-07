@@ -11,10 +11,15 @@ public class Panparu : MonoBehaviour
     private DateTime birthTime;
     private DateTime lastTimeHungry;
     private DateTime lastTimeCheckCare;
+    private DateTime lastTimeAttention;
+    private DateTime lastTimePlay;
     private float averageCare = 1f;
     public static Panparu Instance { get; private set; }
     TimeSpan hungerCooldown = new(0, 0, 6);
     TimeSpan checkCareCooldown = new(0, 0, 1);
+
+    TimeSpan attentionCooldown = new(0, 0, 12);
+    TimeSpan playCooldown = new(0, 0, 12);
 
     void Start()
     {
@@ -22,6 +27,8 @@ public class Panparu : MonoBehaviour
         birthTime = DateTime.Now;
         lastTimeHungry = DateTime.Now;
         lastTimeCheckCare = DateTime.Now;
+        lastTimeAttention = DateTime.Now;
+        lastTimePlay = DateTime.Now;
     }
     void Update()
     {
@@ -30,18 +37,35 @@ public class Panparu : MonoBehaviour
         //Get difference cooldown times
         TimeSpan timeSinceHungry = timeNow - lastTimeHungry;
         TimeSpan timeSinceCheckCare = timeNow - lastTimeCheckCare;
+        TimeSpan timeSinceAttention = timeNow - lastTimeAttention;
+        TimeSpan timeSincePlay = timeNow - lastTimePlay;
         while (timeSinceHungry.CompareTo(hungerCooldown) > 0) {
             food -= 1;
             lastTimeHungry = lastTimeHungry.Add(hungerCooldown);
             timeSinceHungry = timeNow - lastTimeHungry;
             //print("-1 Hunger!");
         }
+        
         if (timeSinceCheckCare.CompareTo(checkCareCooldown) > 0)
         {
             TimeSpan timeSinceBirth = timeNow - birthTime;
             averageCare = (averageCare*timeSinceBirth.Seconds + CalcCare()) / (timeSinceBirth.Seconds+1);
             //print(averageCare);
             lastTimeCheckCare = lastTimeCheckCare.Add(checkCareCooldown);
+        }
+        
+        if (timeSinceAttention.CompareTo(attentionCooldown) > 0)
+        {
+            if (attention > 0)
+                attention -= 1;
+            lastTimeAttention = lastTimeAttention.Add(attentionCooldown);
+        }
+
+        if (timeSincePlay.CompareTo(playCooldown) > 0)
+        {
+            if (play > 0)
+                play -= 1;
+            lastTimePlay = lastTimePlay.Add(playCooldown);
         }
 
     }
@@ -53,22 +77,27 @@ public class Panparu : MonoBehaviour
 
     public void Feed()
     {
-        if (food < 4)
+        if (food < 4) {
             food += 1;
-        else
+            lastTimeHungry.Add(new TimeSpan(0, 0, 1));
+        } else
             Debug.Log("I'm full!");
     }
     public void Pet()
     {
-        if (attention < 1)
+        if (attention < 1) {
             attention += 1;
+            lastTimeAttention.Add(new TimeSpan(0, 0, 1));
+        }
         else
             Debug.Log("I'm already happy!");
     }
     public void Play()
     {
-        if (play < 1)
+        if (play < 1) {
             play += 1;
+            lastTimePlay.Add(new TimeSpan(0, 0, 1));
+        }
         else
             Debug.Log("I'm tired!");
     }
