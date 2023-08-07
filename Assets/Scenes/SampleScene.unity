@@ -803,7 +803,7 @@ Camera:
   far clip plane: 1000
   field of view: 34
   orthographic: 1
-  orthographic size: 0.32
+  orthographic size: 0.3272727
   m_Depth: -1
   m_CullingMask:
     serializedVersion: 2
@@ -1249,8 +1249,8 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 155012505}
-        m_TargetAssemblyTypeName: Panparu, Assembly-CSharp
+      - m_Target: {fileID: 1052089918}
+        m_TargetAssemblyTypeName: Button_Functions, Assembly-CSharp
         m_MethodName: Feed
         m_Mode: 1
         m_Arguments:
