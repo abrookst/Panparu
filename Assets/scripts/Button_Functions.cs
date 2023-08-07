@@ -62,18 +62,19 @@ public class Button_Functions : MonoBehaviour
 
         //Play rotate animation on Panparu
         int timesToPet = 3;
+        bool petting = false;
         Button panparuButton = Panparu.Instance.GetComponent<Button>();
         void getPet() {
-            panparuButton.interactable = false;
-            petClick.SetActive(false);
-            StartCoroutine(PettingCoroutine());
-            timesToPet--;
-            panparuButton.interactable = true;
-            petClick.SetActive(true);
+            petting = true;
         }
         panparuButton.onClick.AddListener(getPet);
         while (timesToPet > 0) {
-            yield return null;
+            yield return new WaitUntil(() => petting);
+            panparuButton.interactable = false;
+            petting = false;
+            yield return StartCoroutine(PettingCoroutine());
+            timesToPet--;
+            panparuButton.interactable = true;
         }
         panparuButton.onClick.RemoveListener(getPet);
 
