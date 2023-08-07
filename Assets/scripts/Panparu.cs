@@ -10,27 +10,45 @@ public class Panparu : MonoBehaviour
 
     private DateTime birthTime;
     private DateTime lastTimeHungry;
+    private DateTime lastTimeCheckCare;
+    private float averageCare = 1f;
     public static Panparu Instance { get; private set; }
+    TimeSpan hungerCooldown = new(0, 0, 6);
+    TimeSpan checkCareCooldown = new(0, 0, 1);
 
     void Start()
     {
         Instance = this;
         birthTime = DateTime.Now;
         lastTimeHungry = DateTime.Now;
+        lastTimeCheckCare = DateTime.Now;
     }
     void Update()
     {
-        TimeSpan hungerCooldown = new(0, 0, 6);
+        
         DateTime timeNow = DateTime.Now;
-        //Get difference between lastTimeHungry and timeNow
+        //Get difference cooldown times
         TimeSpan timeSinceHungry = timeNow - lastTimeHungry;
-        //Get duration of timeSinceHungry in seconds
-        //If timeSinceHungry is greater than 6 seconds, reduce food by 1
+        TimeSpan timeSinceCheckCare = timeNow - lastTimeCheckCare;
+        //Check to see if the time since the last cooldown is greater than our cooldowns
         if (timeSinceHungry.CompareTo(hungerCooldown) > 0) {
             food -= 1;
             lastTimeHungry = lastTimeHungry.Add(hungerCooldown);
+            //print("-1 Hunger!");
         }
-        print(food);
+        if (timeSinceCheckCare.CompareTo(checkCareCooldown) > 0)
+        {
+            TimeSpan timeSinceBirth = timeNow - birthTime;
+            averageCare = (averageCare*timeSinceBirth.Seconds + CalcCare()) / (timeSinceBirth.Seconds+1);
+            //print(averageCare);
+            lastTimeCheckCare = lastTimeCheckCare.Add(checkCareCooldown);
+        }
+
+    }
+
+    float CalcCare()
+    {
+        return ((food / 4f) + attention/1f + play/1f) / 3f;
     }
 
     public void Feed()
