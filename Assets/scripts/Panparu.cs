@@ -96,18 +96,18 @@ public class Panparu : MonoBehaviour
     }
     public void Pet()
     {
+        lastTimeAttention = DateTime.Now;
         if (attention < 1) {
             attention += 1;
-            lastTimeAttention = DateTime.Now;
         }
         else
             Debug.Log("I'm already happy!");
     }
     public void Play()
     {
+        lastTimePlay = DateTime.Now;
         if (play < 1) {
             play += 1;
-            lastTimePlay = DateTime.Now;
         }
         else
             Debug.Log("I'm tired!");
