@@ -30,6 +30,7 @@ public class Panparu : MonoBehaviour
             food -= 1;
             lastTimeHungry = lastTimeHungry.Add(hungerCooldown);
         }
+        print(food);
     }
 
     public void Feed()
