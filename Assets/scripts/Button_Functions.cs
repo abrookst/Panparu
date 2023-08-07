@@ -38,7 +38,7 @@ public class Button_Functions : MonoBehaviour
         TimeButton.interactable = false;
 
         //Create blank UI image
-        GameObject image = new GameObject("Food", typeof(RectTransform), typeof(Image));
+        GameObject image = new("Food", typeof(RectTransform), typeof(Image));
         image.transform.SetParent(GameObject.Find("Canvas").transform);
         
         //Play rotate animation on Panparu

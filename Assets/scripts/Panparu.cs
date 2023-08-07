@@ -30,10 +30,10 @@ public class Panparu : MonoBehaviour
         //Get difference cooldown times
         TimeSpan timeSinceHungry = timeNow - lastTimeHungry;
         TimeSpan timeSinceCheckCare = timeNow - lastTimeCheckCare;
-        //Check to see if the time since the last cooldown is greater than our cooldowns
-        if (timeSinceHungry.CompareTo(hungerCooldown) > 0) {
+        while (timeSinceHungry.CompareTo(hungerCooldown) > 0) {
             food -= 1;
             lastTimeHungry = lastTimeHungry.Add(hungerCooldown);
+            timeSinceHungry = timeNow - lastTimeHungry;
             //print("-1 Hunger!");
         }
         if (timeSinceCheckCare.CompareTo(checkCareCooldown) > 0)
@@ -57,5 +57,19 @@ public class Panparu : MonoBehaviour
             food += 1;
         else
             Debug.Log("I'm full!");
+    }
+    public void Pet()
+    {
+        if (attention < 1)
+            attention += 1;
+        else
+            Debug.Log("I'm already happy!");
+    }
+    public void Play()
+    {
+        if (play < 1)
+            play += 1;
+        else
+            Debug.Log("I'm tired!");
     }
 }
