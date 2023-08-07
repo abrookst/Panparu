@@ -9,6 +9,8 @@ public class Button_Functions : MonoBehaviour
 
     [SerializeField] private GameObject clock;
     [SerializeField] private GameObject food;
+    [SerializeField] private GameObject petClick;
+    [SerializeField] private GameObject playClick;
 
     //Get button references
     [SerializeField] private Button FeedButton;
@@ -56,11 +58,15 @@ public class Button_Functions : MonoBehaviour
         PlayButton.interactable = false;
         TimeButton.interactable = false;
 
+        petClick.SetActive(true);
+
         //Play rotate animation on Panparu
         Panparu.Instance.GetComponent<Animator>().SetTrigger("Pet");
         yield return new WaitForSeconds(2);
 
         Panparu.Instance.Pet();
+
+        petClick.SetActive(false);
 
         FeedButton.interactable = true;
         PetButton.interactable = true;
@@ -76,11 +82,15 @@ public class Button_Functions : MonoBehaviour
         PlayButton.interactable = false;
         TimeButton.interactable = false;
 
+        playClick.SetActive(true);
+
         //Play rotate animation on Panparu
         Panparu.Instance.GetComponent<Animator>().SetTrigger("Play");
         yield return new WaitForSeconds(2);
 
         Panparu.Instance.Play();
+
+        playClick.SetActive(false);
 
         FeedButton.interactable = true;
         PetButton.interactable = true;
