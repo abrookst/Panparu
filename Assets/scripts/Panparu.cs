@@ -24,11 +24,12 @@ public class Panparu : MonoBehaviour
         DateTime timeNow = DateTime.Now;
         //Get difference between lastTimeHungry and timeNow
         TimeSpan timeSinceHungry = timeNow - lastTimeHungry;
-        //Get duration of timeSinceHungry in seconds
         //If timeSinceHungry is greater than 6 seconds, reduce food by 1
-        if (timeSinceHungry.CompareTo(hungerCooldown) > 0) {
+        //Repeat until timeSinceHungry is less than 6 seconds
+        while (timeSinceHungry.CompareTo(hungerCooldown) > 0) {
             food -= 1;
             lastTimeHungry = lastTimeHungry.Add(hungerCooldown);
+            timeSinceHungry = timeNow - lastTimeHungry;
         }
         print(food);
     }
@@ -39,5 +40,19 @@ public class Panparu : MonoBehaviour
             food += 1;
         else
             Debug.Log("I'm full!");
+    }
+    public void Pet()
+    {
+        if (attention < 1)
+            attention += 1;
+        else
+            Debug.Log("I'm already happy!");
+    }
+    public void Play()
+    {
+        if (play < 1)
+            play += 1;
+        else
+            Debug.Log("I'm tired!");
     }
 }
