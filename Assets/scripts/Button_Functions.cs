@@ -47,4 +47,44 @@ public class Button_Functions : MonoBehaviour
         TimeButton.interactable = true;
         
     }
+    public void Pet() {
+        StartCoroutine(PetCoroutine());
+    }
+    IEnumerator PetCoroutine() {
+        FeedButton.interactable = false;
+        PetButton.interactable = false;
+        PlayButton.interactable = false;
+        TimeButton.interactable = false;
+
+        //Play rotate animation on Panparu
+        Panparu.Instance.GetComponent<Animator>().SetTrigger("Pet");
+        yield return new WaitForSeconds(2);
+
+        Panparu.Instance.Pet();
+
+        FeedButton.interactable = true;
+        PetButton.interactable = true;
+        PlayButton.interactable = true;
+        TimeButton.interactable = true;
+    }
+    public void Play() {
+        StartCoroutine(PlayCoroutine());
+    }
+    IEnumerator PlayCoroutine() {
+        FeedButton.interactable = false;
+        PetButton.interactable = false;
+        PlayButton.interactable = false;
+        TimeButton.interactable = false;
+
+        //Play rotate animation on Panparu
+        Panparu.Instance.GetComponent<Animator>().SetTrigger("Play");
+        yield return new WaitForSeconds(2);
+
+        Panparu.Instance.Play();
+
+        FeedButton.interactable = true;
+        PetButton.interactable = true;
+        PlayButton.interactable = true;
+        TimeButton.interactable = true;
+    }
 }

@@ -31,6 +31,8 @@ public class Panparu : MonoBehaviour
     }
     void Update() {
 #if UNITY_EDITOR //Fix bug with reloading scripts in editor causing variables to reset, which causes Panparu to loose tons of hunger
+        if (Instance == null)
+            Instance = this;
         if (lastTimeHungry == default)
             lastTimeHungry = DateTime.Now;
         if (lastTimeCheckCare == default)
