@@ -72,11 +72,10 @@ public class Panparu : MonoBehaviour
                 lastTimePlay = lastTimePlay.Add(playCooldown);
             }
 
-        
-            TimeSpan timeSinceBirth = timeNow - birthTime;
+            lastTimeCheckCare = lastTimeCheckCare.Add(checkCareCooldown);
+            TimeSpan timeSinceBirth = lastTimeCheckCare - birthTime;
             averageCare = (averageCare*timeSinceBirth.Seconds + CalcCare()) / (timeSinceBirth.Seconds+1);
             print(averageCare);
-            lastTimeCheckCare = lastTimeCheckCare.Add(checkCareCooldown);
             timeSinceCheckCare = timeNow - lastTimeCheckCare;
         }
     }
