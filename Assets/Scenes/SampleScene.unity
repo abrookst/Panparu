@@ -1085,6 +1085,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   clock: {fileID: 632817713}
+  FeedButton: {fileID: 1056760372}
+  PetButton: {fileID: 441801262}
+  PlayButton: {fileID: 246297292}
+  TimeButton: {fileID: 418560436}
 --- !u!1 &1056760370
 GameObject:
   m_ObjectHideFlags: 0
