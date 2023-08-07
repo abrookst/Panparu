@@ -72,7 +72,8 @@ public class Button_Functions : MonoBehaviour
             yield return new WaitUntil(() => petting);
             panparuButton.interactable = false;
             petting = false;
-            yield return StartCoroutine(PettingCoroutine());
+            Panparu.Instance.GetComponent<Animator>().SetTrigger("Pet");
+            yield return new WaitForSeconds(0.9f);
             timesToPet--;
             panparuButton.interactable = true;
         }
@@ -86,12 +87,6 @@ public class Button_Functions : MonoBehaviour
         PetButton.interactable = true;
         PlayButton.interactable = true;
         TimeButton.interactable = true;
-    }
-    IEnumerator PettingCoroutine()
-    {
-        //Play pet animation on Panparu
-        Panparu.Instance.GetComponent<Animator>().SetTrigger("Pet");
-        yield return new WaitForSeconds(0.9f);
     }
     public void Play() {
         StartCoroutine(PlayCoroutine());
