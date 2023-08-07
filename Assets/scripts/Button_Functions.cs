@@ -91,7 +91,7 @@ public class Button_Functions : MonoBehaviour
     {
         //Play pet animation on Panparu
         Panparu.Instance.GetComponent<Animator>().SetTrigger("Pet");
-        yield return new WaitForSeconds(1);
+        yield return new WaitForSeconds(0.9f);
     }
     public void Play() {
         StartCoroutine(PlayCoroutine());

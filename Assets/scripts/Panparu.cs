@@ -45,37 +45,39 @@ public class Panparu : MonoBehaviour
 
         DateTime timeNow = DateTime.Now;
         //Get difference cooldown times
-        TimeSpan timeSinceHungry = timeNow - lastTimeHungry;
         TimeSpan timeSinceCheckCare = timeNow - lastTimeCheckCare;
-        TimeSpan timeSinceAttention = timeNow - lastTimeAttention;
-        TimeSpan timeSincePlay = timeNow - lastTimePlay;
-        while (timeSinceHungry.CompareTo(hungerCooldown) > 0) {
-            food -= 1;
-            lastTimeHungry = lastTimeHungry.Add(hungerCooldown);
-            timeSinceHungry = timeNow - lastTimeHungry;
-            //print("-1 Hunger!");
-        }
         
-        if (timeSinceCheckCare.CompareTo(checkCareCooldown) > 0)
+        while (timeSinceCheckCare.CompareTo(checkCareCooldown) > 0)
         {
+            TimeSpan timeSinceHungry = timeNow - lastTimeHungry;
+            TimeSpan timeSinceAttention = timeNow - lastTimeAttention;
+            TimeSpan timeSincePlay = timeNow - lastTimePlay;
+            if (timeSinceHungry.CompareTo(hungerCooldown) > 0) {
+                food -= 1;
+                lastTimeHungry = lastTimeHungry.Add(hungerCooldown);
+                //print("-1 Hunger!");
+            }
+            
+            if (timeSinceAttention.CompareTo(attentionCooldown) > 0)
+            {
+                if (attention > 0)
+                    attention -= 1;
+                lastTimeAttention = lastTimeAttention.Add(attentionCooldown);
+            }
+
+            if (timeSincePlay.CompareTo(playCooldown) > 0)
+            {
+                if (play > 0)
+                    play -= 1;
+                lastTimePlay = lastTimePlay.Add(playCooldown);
+            }
+
+        
             TimeSpan timeSinceBirth = timeNow - birthTime;
             averageCare = (averageCare*timeSinceBirth.Seconds + CalcCare()) / (timeSinceBirth.Seconds+1);
             print(averageCare);
             lastTimeCheckCare = lastTimeCheckCare.Add(checkCareCooldown);
-        }
-        
-        if (timeSinceAttention.CompareTo(attentionCooldown) > 0)
-        {
-            if (attention > 0)
-                attention -= 1;
-            lastTimeAttention = lastTimeAttention.Add(attentionCooldown);
-        }
-
-        if (timeSincePlay.CompareTo(playCooldown) > 0)
-        {
-            if (play > 0)
-                play -= 1;
-            lastTimePlay = lastTimePlay.Add(playCooldown);
+            timeSinceCheckCare = timeNow - lastTimeCheckCare;
         }
     }
 
