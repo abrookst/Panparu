@@ -61,8 +61,19 @@ public class Button_Functions : MonoBehaviour
         petClick.SetActive(true);
 
         //Play rotate animation on Panparu
-        Panparu.Instance.GetComponent<Animator>().SetTrigger("Pet");
-        yield return new WaitForSeconds(2);
+        int timesToPet = 10;
+        void getPet() {
+            //Play pet animation on Panparu
+            Panparu.Instance.GetComponent<Animator>().SetTrigger("Pet");
+
+            timesToPet--;
+        }
+        Button panparuButton = Panparu.Instance.GetComponent<Button>();
+        panparuButton.onClick.AddListener(getPet);
+        while (timesToPet > 0) {
+            yield return null;
+        }
+        panparuButton.onClick.RemoveListener(getPet);
 
         Panparu.Instance.Pet();
 
