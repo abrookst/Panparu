@@ -61,14 +61,16 @@ public class Button_Functions : MonoBehaviour
         petClick.SetActive(true);
 
         //Play rotate animation on Panparu
-        int timesToPet = 10;
-        void getPet() {
-            //Play pet animation on Panparu
-            Panparu.Instance.GetComponent<Animator>().SetTrigger("Pet");
-
-            timesToPet--;
-        }
+        int timesToPet = 3;
         Button panparuButton = Panparu.Instance.GetComponent<Button>();
+        void getPet() {
+            panparuButton.interactable = false;
+            petClick.SetActive(false);
+            StartCoroutine(PettingCoroutine());
+            timesToPet--;
+            panparuButton.interactable = true;
+            petClick.SetActive(true);
+        }
         panparuButton.onClick.AddListener(getPet);
         while (timesToPet > 0) {
             yield return null;
@@ -83,6 +85,12 @@ public class Button_Functions : MonoBehaviour
         PetButton.interactable = true;
         PlayButton.interactable = true;
         TimeButton.interactable = true;
+    }
+    IEnumerator PettingCoroutine()
+    {
+        //Play pet animation on Panparu
+        Panparu.Instance.GetComponent<Animator>().SetTrigger("Pet");
+        yield return new WaitForSeconds(1);
     }
     public void Play() {
         StartCoroutine(PlayCoroutine());
