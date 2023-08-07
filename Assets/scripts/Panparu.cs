@@ -15,11 +15,10 @@ public class Panparu : MonoBehaviour
     private DateTime lastTimePlay;
     private float averageCare = 1f;
     public static Panparu Instance { get; private set; }
-    TimeSpan hungerCooldown = new(0, 0, 6);
-    TimeSpan checkCareCooldown = new(0, 0, 1);
-
-    TimeSpan attentionCooldown = new(0, 0, 12);
-    TimeSpan playCooldown = new(0, 0, 12);
+    readonly TimeSpan checkCareCooldown = new(0, 0, 1);
+    readonly TimeSpan hungerCooldown = new(0, 0, 6);
+    readonly TimeSpan attentionCooldown = new(0, 0, 12);
+    readonly TimeSpan playCooldown = new(0, 0, 12);
 
     void Start()
     {
@@ -30,9 +29,18 @@ public class Panparu : MonoBehaviour
         lastTimeAttention = DateTime.Now;
         lastTimePlay = DateTime.Now;
     }
-    void Update()
-    {
-        
+    void Update() {
+#if UNITY_EDITOR //Fix bug with reloading scripts in editor causing variables to reset, which causes Panparu to loose tons of hunger
+        if (lastTimeHungry == default)
+            lastTimeHungry = DateTime.Now;
+        if (lastTimeCheckCare == default)
+            lastTimeCheckCare = DateTime.Now;
+        if (lastTimeAttention == default)
+            lastTimeAttention = DateTime.Now;
+        if (lastTimePlay == default)
+            lastTimePlay = DateTime.Now;
+#endif
+
         DateTime timeNow = DateTime.Now;
         //Get difference cooldown times
         TimeSpan timeSinceHungry = timeNow - lastTimeHungry;
@@ -50,7 +58,7 @@ public class Panparu : MonoBehaviour
         {
             TimeSpan timeSinceBirth = timeNow - birthTime;
             averageCare = (averageCare*timeSinceBirth.Seconds + CalcCare()) / (timeSinceBirth.Seconds+1);
-            //print(averageCare);
+            print(averageCare);
             lastTimeCheckCare = lastTimeCheckCare.Add(checkCareCooldown);
         }
         
