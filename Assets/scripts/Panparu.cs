@@ -59,7 +59,7 @@ public class Panparu : MonoBehaviour
     {
         if (food < 4) {
             food += 1;
-            lastTimeHungry = DateTime.Now;
+            lastTimeHungry.Add(new TimeSpan(0, 0, 1));
         } else
             Debug.Log("I'm full!");
     }
@@ -67,7 +67,7 @@ public class Panparu : MonoBehaviour
     {
         if (attention < 1) {
             attention += 1;
-            lastTimeAttention = DateTime.Now;
+            lastTimeAttention.Add(new TimeSpan(0, 0, 1));
         }
         else
             Debug.Log("I'm already happy!");
@@ -76,7 +76,7 @@ public class Panparu : MonoBehaviour
     {
         if (play < 1) {
             play += 1;
-            lastTimePlay = DateTime.Now;
+            lastTimePlay.Add(new TimeSpan(0, 0, 1));
         }
         else
             Debug.Log("I'm tired!");
