@@ -12,6 +12,8 @@ public class Button_Functions : MonoBehaviour
     [SerializeField] private GameObject petClick;
     [SerializeField] private GameObject playClick;
 
+    public static Button_Functions Instance { get; private set; }
+
     //Get button references
     [SerializeField] private Button FeedButton;
     [SerializeField] private Button PetButton;
@@ -19,6 +21,11 @@ public class Button_Functions : MonoBehaviour
     [SerializeField] private Button TimeButton;
 
     public GameObject feeling;
+
+    void Start()
+    {
+        Instance = this;
+    }
 
     // Update is called once per frame
     public void ToggleTime()
@@ -37,10 +44,7 @@ public class Button_Functions : MonoBehaviour
         }
     }
     IEnumerator FeedCoroutine() {
-        FeedButton.interactable = false;
-        PetButton.interactable = false;
-        PlayButton.interactable = false;
-        TimeButton.interactable = false;
+        toggleButtons(false);
         Panparu.Instance.disableChecking();
 
         food.SetActive(true);
@@ -52,11 +56,8 @@ public class Button_Functions : MonoBehaviour
         food.SetActive(false);
 
         Panparu.Instance.Feed();
-        
-        FeedButton.interactable = true;
-        PetButton.interactable = true;
-        PlayButton.interactable = true;
-        TimeButton.interactable = true;
+
+        toggleButtons(true);
         Panparu.Instance.enableChecking();
         
     }
@@ -65,10 +66,7 @@ public class Button_Functions : MonoBehaviour
         StartCoroutine(PetCoroutine());
     }
     IEnumerator PetCoroutine() {
-        FeedButton.interactable = false;
-        PetButton.interactable = false;
-        PlayButton.interactable = false;
-        TimeButton.interactable = false;
+        toggleButtons(false);
         Panparu.Instance.disableChecking();
 
         petClick.SetActive(true);
@@ -96,10 +94,7 @@ public class Button_Functions : MonoBehaviour
 
         petClick.SetActive(false);
 
-        FeedButton.interactable = true;
-        PetButton.interactable = true;
-        PlayButton.interactable = true;
-        TimeButton.interactable = true;
+        toggleButtons(true);
         Panparu.Instance.enableChecking();
     }
     public void Play() {
@@ -107,10 +102,7 @@ public class Button_Functions : MonoBehaviour
         StartCoroutine(PlayCoroutine());
     }
     IEnumerator PlayCoroutine() {
-        FeedButton.interactable = false;
-        PetButton.interactable = false;
-        PlayButton.interactable = false;
-        TimeButton.interactable = false;
+        toggleButtons(false);
         Panparu.Instance.disableChecking();
 
         playClick.SetActive(true);
@@ -123,10 +115,16 @@ public class Button_Functions : MonoBehaviour
 
         playClick.SetActive(false);
 
-        FeedButton.interactable = true;
-        PetButton.interactable = true;
-        PlayButton.interactable = true;
-        TimeButton.interactable = true;
+        toggleButtons(true);
         Panparu.Instance.enableChecking();
     }
+
+    public void toggleButtons(bool on)
+    {
+        FeedButton.interactable = on;
+        PetButton.interactable = on;
+        PlayButton.interactable = on;
+        TimeButton.interactable = on;
+    }
+
 }

@@ -10,6 +10,9 @@ public class Panparu : MonoBehaviour
     [SerializeField] private int attention = 1;
     [SerializeField] private int play = 1;
 
+    enum CareType { Good, Okay, Bad, Dead};
+    enum Age { Egg, Child, Adult };
+
     private DateTime birthTime;
     private DateTime lastTimeHungry;
     private DateTime lastTimeCheckCare;
@@ -22,11 +25,17 @@ public class Panparu : MonoBehaviour
     readonly TimeSpan attentionCooldown = new(0, 0, 12);
     readonly TimeSpan playCooldown = new(0, 0, 12);
 
+    private Age currentAge;
+    private CareType childCare;
+    private CareType currentCare; 
+
     public GameObject feeling;
     public Sprite goodSprite;
     public Sprite okaySprite;
     public Sprite badSprite;
     public Sprite deadSprite;
+
+    private SpriteRenderer sprRdr;
 
     private Animator m_Animator;
 
@@ -38,12 +47,16 @@ public class Panparu : MonoBehaviour
     void Start()
     {
         Instance = this;
+        //NOTE these need to be saved and reloaded accurately on close
         birthTime = DateTime.Now;
+        currentAge = Age.Child;
+        //end note
         lastTimeHungry = DateTime.Now;
         lastTimeCheckCare = DateTime.Now;
         lastTimeAttention = DateTime.Now;
         lastTimePlay = DateTime.Now;
 
+        sprRdr = gameObject.GetComponent<SpriteRenderer>();
         m_Animator = gameObject.GetComponent<Animator>();
 
         enableChecking();
@@ -67,7 +80,8 @@ public class Panparu : MonoBehaviour
         DateTime timeNow = DateTime.Now;
         //Get difference cooldown times
         TimeSpan timeSinceCheckCare = timeNow - lastTimeCheckCare;
-        
+        TimeSpan timeSinceBirth = lastTimeCheckCare - birthTime;
+
         while (timeSinceCheckCare.CompareTo(checkCareCooldown) > 0)
         {
             TimeSpan timeSinceHungry = timeNow - lastTimeHungry;
@@ -94,7 +108,6 @@ public class Panparu : MonoBehaviour
             }
 
             lastTimeCheckCare = lastTimeCheckCare.Add(checkCareCooldown);
-            TimeSpan timeSinceBirth = lastTimeCheckCare - birthTime;
             averageCare = (averageCare*timeSinceBirth.Seconds + CalcCare()) / (timeSinceBirth.Seconds+1);
             print(averageCare);
             timeSinceCheckCare = timeNow - lastTimeCheckCare;
@@ -104,20 +117,35 @@ public class Panparu : MonoBehaviour
         SETTING ANIMATION SPEED DEPENDING ON HEALTH:
         Borked bc this slows down stuff besides panparu_shift. ill figure it out tomorrow *yawn*
         if(averageCare > .8){
-            m_Animator.speed = 1f;
-        }
-        else if(averageCare > .6){
-            m_Animator.speed = .75f;
-        }
-        else if(averageCare > .4){
-            m_Animator.speed = .5f;
-        }
-        else{
-            m_Animator.speed = .25f;
-        }
         */
-
-
+        if (averageCare > .8)
+        {
+            currentCare = CareType.Good;
+            //m_Animator.speed = 1f;
+        }
+        else if (averageCare > .6)
+        {
+            currentCare = CareType.Okay;
+            //m_Animator.speed = .75f;
+        }
+        else if (averageCare > .4)
+        {
+            currentCare = CareType.Bad;
+            //m_Animator.speed = .5f;
+        }
+        else
+        {
+            currentCare = CareType.Dead;
+            //m_Animator.speed = .25f;
+        }
+        if ((timeSinceBirth.Seconds > 24 && currentAge == Age.Egg) || (timeSinceBirth.Seconds > 60 && currentAge == Age.Child))
+        {
+            Evolve();
+        }
+        if(averageCare < 0)
+        {
+            Dead();
+        }
     }
 
     float CalcCare()
@@ -130,15 +158,15 @@ public class Panparu : MonoBehaviour
         if (food < 4) {
             food += 1;
             lastTimeHungry = DateTime.Now;
-            ShowFeeling("good");
+            ShowFeeling(CareType.Good);
         } else
-            ShowFeeling("okay");
+            ShowFeeling(CareType.Okay);
             Debug.Log("I'm full!");
     }
     public void Pet()
     {
         lastTimeAttention = DateTime.Now;
-        ShowFeeling("good");
+        ShowFeeling(CareType.Good);
         if (attention < 1) {
             attention += 1;
         }
@@ -148,7 +176,7 @@ public class Panparu : MonoBehaviour
     public void Play()
     {
         lastTimePlay = DateTime.Now;
-        ShowFeeling("good");
+        ShowFeeling(CareType.Good);
         if (play < 1) {
             play += 1;
         }
@@ -156,19 +184,19 @@ public class Panparu : MonoBehaviour
             Debug.Log("I'm tired!");
     }
 
-    void ShowFeeling(string emotion)
+    void ShowFeeling(CareType emotion)
     {
         feeling.SetActive(true);
-        if(emotion == "good"){
+        if(emotion == CareType.Good){
             feeling.GetComponent<Image>().sprite = goodSprite;
         }
-        else if(emotion == "okay"){
+        else if(emotion == CareType.Okay){
             feeling.GetComponent<Image>().sprite = okaySprite;
         }
-        else if(emotion == "bad"){
+        else if(emotion == CareType.Bad){
             feeling.GetComponent<Image>().sprite = badSprite;
         }
-        else if(emotion == "dead"){
+        else if(emotion == CareType.Dead){
             feeling.GetComponent<Image>().sprite = deadSprite;
         }
         else{
@@ -180,23 +208,14 @@ public class Panparu : MonoBehaviour
 
     IEnumerator ShowFeelingCoroutine()
     {
+        disableChecking();
         yield return new WaitForSeconds(2);
         feeling.SetActive(false);
+        enableChecking();
     }
 
-    void checkEmotion(){
-        if(averageCare > .8){
-            ShowFeeling("good");
-        }
-        else if(averageCare > .6){
-            ShowFeeling("okay");
-        }
-        else if(averageCare > .4){
-            ShowFeeling("bad");
-        }
-        else{
-            ShowFeeling("dead");
-        }
+    void checkEmotion(){       
+        ShowFeeling(currentCare);
     }
 
     public void enableChecking(){
@@ -204,5 +223,88 @@ public class Panparu : MonoBehaviour
     }
     public void disableChecking(){
         Instance.GetComponent<Button>().onClick.RemoveListener(checkEmotion);
+    }
+
+    void Evolve()
+    {
+        birthTime = DateTime.Now;
+        if (currentAge == Age.Egg)
+        {
+            currentAge = Age.Child;
+            if (currentCare == CareType.Good)
+            {
+                //set to CG
+                childCare = CareType.Good;
+
+            }
+            else if (currentCare == CareType.Okay)
+            {
+                //set to CO
+                childCare = CareType.Okay;
+            }
+            else
+            {
+                //set to CB
+                childCare = CareType.Bad;
+            }
+        }
+        else
+        {
+            currentAge = Age.Adult;
+            if (currentCare == CareType.Good)
+            {
+                if (childCare == CareType.Good)
+                {
+                    //set to AGG
+                }
+                else if (childCare == CareType.Okay)
+                {
+                    //set to AGO
+                }
+                else
+                {
+                    //set to AGB
+                }
+            }
+            else if (currentCare == CareType.Okay)
+            {
+                if (childCare == CareType.Good)
+                {
+                    //set to AOG
+                }
+                else if (childCare == CareType.Okay)
+                {
+                    //set to AOO
+                }
+                else
+                {
+                    //set to AOB
+                }
+            }
+            else
+            {
+                if (childCare == CareType.Good)
+                {
+                    //set to ABG
+                }
+                else if (childCare == CareType.Okay)
+                {
+                    //set to ABO
+                }
+                else
+                {
+                    //set to ABB
+                }
+            }
+        }
+    }
+
+    void Dead()
+    {
+        //sprRdr.sprite = tombstone;
+        m_Animator.enabled = false;
+        Button_Functions.Instance.toggleButtons(false);
+        disableChecking();
+        //add a thing where, on click everything is reset
     }
 }
