@@ -2,6 +2,8 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using System;
+using UnityEngine.UI;
+
 public class Panparu : MonoBehaviour
 {
     [SerializeField] private int food = 4;
@@ -19,6 +21,13 @@ public class Panparu : MonoBehaviour
     readonly TimeSpan hungerCooldown = new(0, 0, 6);
     readonly TimeSpan attentionCooldown = new(0, 0, 12);
     readonly TimeSpan playCooldown = new(0, 0, 12);
+
+    public GameObject feeling;
+    public Sprite goodSprite;
+    public Sprite okaySprite;
+    public Sprite badSprite;
+    public Sprite deadSprite;
+
 
     public int GetFood(){
         return food;
@@ -94,12 +103,15 @@ public class Panparu : MonoBehaviour
         if (food < 4) {
             food += 1;
             lastTimeHungry = DateTime.Now;
+            ShowFeeling("good");
         } else
+            ShowFeeling("okay");
             Debug.Log("I'm full!");
     }
     public void Pet()
     {
         lastTimeAttention = DateTime.Now;
+        ShowFeeling("good");
         if (attention < 1) {
             attention += 1;
         }
@@ -109,10 +121,42 @@ public class Panparu : MonoBehaviour
     public void Play()
     {
         lastTimePlay = DateTime.Now;
+        ShowFeeling("good");
         if (play < 1) {
             play += 1;
         }
         else
             Debug.Log("I'm tired!");
+    }
+
+    void ShowFeeling(string emotion)
+    {
+        feeling.SetActive(true);
+        print("SHOWING FEELING");
+        if(emotion == "good"){
+            feeling.GetComponent<Image>().sprite = goodSprite;
+        }
+        else if(emotion == "okay"){
+            feeling.GetComponent<Image>().sprite = okaySprite;
+        }
+        else if(emotion == "bad"){
+            feeling.GetComponent<Image>().sprite = badSprite;
+        }
+        else if(emotion == "dead"){
+            feeling.GetComponent<Image>().sprite = deadSprite;
+        }
+        else{
+            Debug.LogError("Invalid Emotion");
+            feeling.GetComponent<Image>().sprite = deadSprite;
+        }
+        StartCoroutine(ShowFeelingCoroutine());
+        feeling.SetActive(false);
+        return;
+    }
+
+    IEnumerator ShowFeelingCoroutine()
+    {
+        print("COROUTINE");
+        yield return new WaitForSeconds(2);
     }
 }
