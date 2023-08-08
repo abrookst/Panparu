@@ -18,6 +18,8 @@ public class Button_Functions : MonoBehaviour
     [SerializeField] private Button PlayButton;
     [SerializeField] private Button TimeButton;
 
+    public GameObject feeling;
+
     // Update is called once per frame
     public void ToggleTime()
     {
@@ -25,6 +27,7 @@ public class Button_Functions : MonoBehaviour
     }
 
     public void Feed() {
+        feeling.SetActive(false);
         if(Panparu.Instance.GetFood() < 4){
             StartCoroutine(FeedCoroutine());
             
@@ -56,6 +59,7 @@ public class Button_Functions : MonoBehaviour
         
     }
     public void Pet() {
+        feeling.SetActive(false);
         StartCoroutine(PetCoroutine());
     }
     IEnumerator PetCoroutine() {
@@ -95,6 +99,7 @@ public class Button_Functions : MonoBehaviour
         TimeButton.interactable = true;
     }
     public void Play() {
+        feeling.SetActive(false);
         StartCoroutine(PlayCoroutine());
     }
     IEnumerator PlayCoroutine() {
