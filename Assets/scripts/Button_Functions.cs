@@ -25,7 +25,9 @@ public class Button_Functions : MonoBehaviour
     }
 
     public void Feed() {
-        StartCoroutine(FeedCoroutine());
+        if(Panparu.Instance.GetFood() < 4){
+            StartCoroutine(FeedCoroutine());
+        }
     }
     IEnumerator FeedCoroutine() {
         FeedButton.interactable = false;
@@ -73,7 +75,7 @@ public class Button_Functions : MonoBehaviour
             panparuButton.interactable = false;
             petting = false;
             Panparu.Instance.GetComponent<Animator>().SetTrigger("Pet");
-            yield return new WaitForSeconds(0.9f);
+            yield return new WaitForSeconds(0.5f);
             timesToPet--;
             panparuButton.interactable = true;
         }

@@ -20,6 +20,10 @@ public class Panparu : MonoBehaviour
     readonly TimeSpan attentionCooldown = new(0, 0, 12);
     readonly TimeSpan playCooldown = new(0, 0, 12);
 
+    public int GetFood(){
+        return food;
+    }
+
     void Start()
     {
         Instance = this;

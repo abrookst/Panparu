@@ -13,7 +13,8 @@ public class ClockManager : MonoBehaviour
     void Awake()
     {
         DateTime time = DateTime.Now;
-        if (time.Hour < 8 || time.Hour > 20)
+        print(time.Hour);
+        if (time.Hour < 8 | time.Hour >= 20)
         {
             day = false;
         }
@@ -31,7 +32,7 @@ public class ClockManager : MonoBehaviour
         string hour = LeadingZero(time.Hour);
         string minute = LeadingZero(time.Minute);
         textClock.text = hour + ":" + minute;
-        if(time.Hour < 8 || time.Hour > 20)
+        if(time.Hour < 8 | time.Hour >= 20)
         {
             if (day)
             {
