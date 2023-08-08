@@ -21,6 +21,7 @@ public class Button_Functions : MonoBehaviour
     [SerializeField] private Button TimeButton;
 
     public GameObject feeling;
+    public bool isBusy = false;
 
     void Start()
     {
@@ -44,8 +45,8 @@ public class Button_Functions : MonoBehaviour
         }
     }
     IEnumerator FeedCoroutine() {
-        toggleButtons(false);
-        Panparu.Instance.disableChecking();
+        ToggleButtons(false);
+        isBusy = true;
 
         food.SetActive(true);
         
@@ -57,8 +58,8 @@ public class Button_Functions : MonoBehaviour
 
         Panparu.Instance.Feed();
 
-        toggleButtons(true);
-        Panparu.Instance.enableChecking();
+        ToggleButtons(true);
+        isBusy = false;
         
     }
     public void Pet() {
@@ -66,8 +67,8 @@ public class Button_Functions : MonoBehaviour
         StartCoroutine(PetCoroutine());
     }
     IEnumerator PetCoroutine() {
-        toggleButtons(false);
-        Panparu.Instance.disableChecking();
+        ToggleButtons(false);
+        isBusy = true;
 
         petClick.SetActive(true);
 
@@ -94,16 +95,16 @@ public class Button_Functions : MonoBehaviour
 
         petClick.SetActive(false);
 
-        toggleButtons(true);
-        Panparu.Instance.enableChecking();
+        ToggleButtons(true);
+        isBusy = false;
     }
     public void Play() {
         feeling.SetActive(false);
         StartCoroutine(PlayCoroutine());
     }
     IEnumerator PlayCoroutine() {
-        toggleButtons(false);
-        Panparu.Instance.disableChecking();
+        ToggleButtons(false);
+        isBusy = true;
 
         playClick.SetActive(true);
 
@@ -115,11 +116,11 @@ public class Button_Functions : MonoBehaviour
 
         playClick.SetActive(false);
 
-        toggleButtons(true);
-        Panparu.Instance.enableChecking();
+        ToggleButtons(true);
+        isBusy = false;
     }
 
-    public void toggleButtons(bool on)
+    public void ToggleButtons(bool on)
     {
         FeedButton.interactable = on;
         PetButton.interactable = on;

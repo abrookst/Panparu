@@ -39,6 +39,7 @@ public class Panparu : MonoBehaviour
 
     private Animator m_Animator;
 
+    bool isChecking = false;
 
     public int GetFood(){
         return food;
@@ -59,7 +60,7 @@ public class Panparu : MonoBehaviour
         sprRdr = gameObject.GetComponent<SpriteRenderer>();
         m_Animator = gameObject.GetComponent<Animator>();
 
-        enableChecking();
+        Instance.GetComponent<Button>().onClick.AddListener(CheckEmotion);
     }
 
     void Update() 
@@ -208,21 +209,16 @@ public class Panparu : MonoBehaviour
 
     IEnumerator ShowFeelingCoroutine()
     {
-        disableChecking();
+        isChecking = true;
         yield return new WaitForSeconds(2);
         feeling.SetActive(false);
-        enableChecking();
+        isChecking = false;
     }
 
-    void checkEmotion(){       
+    void CheckEmotion(){  
+        if (Button_Functions.Instance.isBusy || isChecking)
+            return;
         ShowFeeling(currentCare);
-    }
-
-    public void enableChecking(){
-        Instance.GetComponent<Button>().onClick.AddListener(checkEmotion);
-    }
-    public void disableChecking(){
-        Instance.GetComponent<Button>().onClick.RemoveListener(checkEmotion);
     }
 
     void Evolve()
@@ -303,8 +299,8 @@ public class Panparu : MonoBehaviour
     {
         //sprRdr.sprite = tombstone;
         m_Animator.enabled = false;
-        Button_Functions.Instance.toggleButtons(false);
-        disableChecking();
+        Button_Functions.Instance.ToggleButtons(false);
+        Instance.GetComponent<Button>().onClick.RemoveListener(CheckEmotion);
         //add a thing where, on click everything is reset
     }
 }
