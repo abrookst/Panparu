@@ -70,7 +70,7 @@ public class Panparu : MonoBehaviour
         lastTimeAttention = DateTime.Now;
         lastTimePlay = DateTime.Now;
 
-        sprRdr = gameObject.GetComponent<SpriteRenderer>();
+        sprRdr = gameObject.GetComponent<Image>();
         m_Animator = gameObject.GetComponent<Animator>();
 
         Instance.GetComponent<Image>().sprite = SetEgg();
