@@ -297,19 +297,16 @@ MonoBehaviour:
   food: 4
   attention: 1
   play: 1
+  averageCare: 1
+  currentCare: 0
+  eggCare: 0
+  childCare: 0
+  currentAge: 0
   feeling: {fileID: 678589182}
   goodSprite: {fileID: 21300000, guid: e6b783d6584a13e4db7f0afafb1ad792, type: 3}
   okaySprite: {fileID: 21300000, guid: 38337e3d4b78ffb49a4ac09e85150f38, type: 3}
   badSprite: {fileID: 21300000, guid: 26ba44d97061d9c40ac64f29597cfd1f, type: 3}
   deadSprite: {fileID: 21300000, guid: 4e9552bd947b9fd4c8ff5a7724e3d4ad, type: 3}
-  eggSprites:
-  - {fileID: 21300000, guid: 3198555fb1191d3439e6848cae7c972f, type: 3}
-  - {fileID: 21300000, guid: 94669a3d47f4b114fbf5539b1637b0f3, type: 3}
-  - {fileID: 21300000, guid: b3aff60d1b1abef40a414c00580a6346, type: 3}
-  - {fileID: 21300000, guid: 3ec88df482441074e8715a89f2dc3e27, type: 3}
-  - {fileID: 21300000, guid: e9e986a27ed2bf440b6b3526e1ba94b1, type: 3}
-  - {fileID: 21300000, guid: af95757a757258a47b456f6a8d9cbfb8, type: 3}
-  tombstone: {fileID: 21300000, guid: 385e07d1fceb19842b5772d29058591f, type: 3}
   childSprites:
   - {fileID: 7482667652216324306, guid: 12c03815d71a52c4c9e0628cddad3c15, type: 3}
   - {fileID: 7482667652216324306, guid: 12c03815d71a52c4c9e0628cddad3c15, type: 3}
@@ -326,6 +323,14 @@ MonoBehaviour:
   - {fileID: 21300000, guid: df2e70c9337b81949902dc15901ba1b4, type: 3}
   - {fileID: 21300000, guid: df2e70c9337b81949902dc15901ba1b4, type: 3}
   - {fileID: 21300000, guid: df2e70c9337b81949902dc15901ba1b4, type: 3}
+  eggSprites:
+  - {fileID: 21300000, guid: 3198555fb1191d3439e6848cae7c972f, type: 3}
+  - {fileID: 21300000, guid: 94669a3d47f4b114fbf5539b1637b0f3, type: 3}
+  - {fileID: 21300000, guid: b3aff60d1b1abef40a414c00580a6346, type: 3}
+  - {fileID: 21300000, guid: 3ec88df482441074e8715a89f2dc3e27, type: 3}
+  - {fileID: 21300000, guid: e9e986a27ed2bf440b6b3526e1ba94b1, type: 3}
+  - {fileID: 21300000, guid: af95757a757258a47b456f6a8d9cbfb8, type: 3}
+  tombstone: {fileID: 21300000, guid: fd9395581343d394998c0907496661e7, type: 3}
 --- !u!114 &155012506
 MonoBehaviour:
   m_ObjectHideFlags: 0
