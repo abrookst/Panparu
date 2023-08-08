@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using System;
 using UnityEngine.UI;
+using Random = UnityEngine.Random;
 
 public class Panparu : MonoBehaviour
 {
@@ -35,11 +36,11 @@ public class Panparu : MonoBehaviour
     public Sprite badSprite;
     public Sprite deadSprite;
 
-    private SpriteRenderer sprRdr;
-
     private Animator m_Animator;
 
     bool isChecking = false;
+
+    public Sprite[] eggSprites;
 
     public int GetFood(){
         return food;
@@ -57,8 +58,9 @@ public class Panparu : MonoBehaviour
         lastTimeAttention = DateTime.Now;
         lastTimePlay = DateTime.Now;
 
-        sprRdr = gameObject.GetComponent<SpriteRenderer>();
         m_Animator = gameObject.GetComponent<Animator>();
+
+        Instance.GetComponent<Image>().sprite = SetEgg();
 
         Instance.GetComponent<Button>().onClick.AddListener(CheckEmotion);
     }
@@ -221,6 +223,13 @@ public class Panparu : MonoBehaviour
         ShowFeeling(currentCare);
     }
 
+    Sprite SetEgg()
+    {
+        int randEgg = Random.Range(0, 6);
+        print("Rand:" + randEgg);
+        return eggSprites[randEgg];
+    }
+
     void Evolve()
     {
         birthTime = DateTime.Now;
@@ -297,7 +306,7 @@ public class Panparu : MonoBehaviour
 
     void Dead()
     {
-        //sprRdr.sprite = tombstone;
+        //Instance.GetComponent<Image>().sprite = tombstone;
         m_Animator.enabled = false;
         Button_Functions.Instance.ToggleButtons(false);
         Instance.GetComponent<Button>().onClick.RemoveListener(CheckEmotion);
