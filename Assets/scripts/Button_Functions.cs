@@ -41,6 +41,7 @@ public class Button_Functions : MonoBehaviour
         PetButton.interactable = false;
         PlayButton.interactable = false;
         TimeButton.interactable = false;
+        Panparu.Instance.disableChecking();
 
         food.SetActive(true);
         
@@ -56,6 +57,7 @@ public class Button_Functions : MonoBehaviour
         PetButton.interactable = true;
         PlayButton.interactable = true;
         TimeButton.interactable = true;
+        Panparu.Instance.enableChecking();
         
     }
     public void Pet() {
@@ -67,6 +69,7 @@ public class Button_Functions : MonoBehaviour
         PetButton.interactable = false;
         PlayButton.interactable = false;
         TimeButton.interactable = false;
+        Panparu.Instance.disableChecking();
 
         petClick.SetActive(true);
 
@@ -97,6 +100,7 @@ public class Button_Functions : MonoBehaviour
         PetButton.interactable = true;
         PlayButton.interactable = true;
         TimeButton.interactable = true;
+        Panparu.Instance.enableChecking();
     }
     public void Play() {
         feeling.SetActive(false);
@@ -107,6 +111,7 @@ public class Button_Functions : MonoBehaviour
         PetButton.interactable = false;
         PlayButton.interactable = false;
         TimeButton.interactable = false;
+        Panparu.Instance.disableChecking();
 
         playClick.SetActive(true);
 
@@ -122,5 +127,6 @@ public class Button_Functions : MonoBehaviour
         PetButton.interactable = true;
         PlayButton.interactable = true;
         TimeButton.interactable = true;
+        Panparu.Instance.enableChecking();
     }
 }

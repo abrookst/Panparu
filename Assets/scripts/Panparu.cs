@@ -28,6 +28,8 @@ public class Panparu : MonoBehaviour
     public Sprite badSprite;
     public Sprite deadSprite;
 
+    private Animator m_Animator;
+
 
     public int GetFood(){
         return food;
@@ -41,9 +43,15 @@ public class Panparu : MonoBehaviour
         lastTimeCheckCare = DateTime.Now;
         lastTimeAttention = DateTime.Now;
         lastTimePlay = DateTime.Now;
+
+        m_Animator = gameObject.GetComponent<Animator>();
+
+        enableChecking();
     }
-    void Update() {
-#if UNITY_EDITOR //Fix bug with reloading scripts in editor causing variables to reset, which causes Panparu to loose tons of hunger
+
+    void Update() 
+    {
+        #if UNITY_EDITOR //Fix bug with reloading scripts in editor causing variables to reset, which causes Panparu to loose tons of hunger
         if (Instance == null)
             Instance = this;
         if (lastTimeHungry == default)
@@ -54,7 +62,7 @@ public class Panparu : MonoBehaviour
             lastTimeAttention = DateTime.Now;
         if (lastTimePlay == default)
             lastTimePlay = DateTime.Now;
-#endif
+        #endif
 
         DateTime timeNow = DateTime.Now;
         //Get difference cooldown times
@@ -91,6 +99,25 @@ public class Panparu : MonoBehaviour
             print(averageCare);
             timeSinceCheckCare = timeNow - lastTimeCheckCare;
         }
+
+        /*
+        SETTING ANIMATION SPEED DEPENDING ON HEALTH:
+        Borked bc this slows down stuff besides panparu_shift. ill figure it out tomorrow *yawn*
+        if(averageCare > .8){
+            m_Animator.speed = 1f;
+        }
+        else if(averageCare > .6){
+            m_Animator.speed = .75f;
+        }
+        else if(averageCare > .4){
+            m_Animator.speed = .5f;
+        }
+        else{
+            m_Animator.speed = .25f;
+        }
+        */
+
+
     }
 
     float CalcCare()
@@ -155,5 +182,27 @@ public class Panparu : MonoBehaviour
     {
         yield return new WaitForSeconds(2);
         feeling.SetActive(false);
+    }
+
+    void checkEmotion(){
+        if(averageCare > .8){
+            ShowFeeling("good");
+        }
+        else if(averageCare > .6){
+            ShowFeeling("okay");
+        }
+        else if(averageCare > .4){
+            ShowFeeling("bad");
+        }
+        else{
+            ShowFeeling("dead");
+        }
+    }
+
+    public void enableChecking(){
+        Instance.GetComponent<Button>().onClick.AddListener(checkEmotion);
+    }
+    public void disableChecking(){
+        Instance.GetComponent<Button>().onClick.RemoveListener(checkEmotion);
     }
 }
