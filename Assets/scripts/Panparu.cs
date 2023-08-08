@@ -18,24 +18,32 @@ public class Panparu : MonoBehaviour
     private DateTime lastTimeCheckCare;
     private DateTime lastTimeAttention;
     private DateTime lastTimePlay;
-    private float averageCare = 1f;
+    [SerializeField] private float averageCare = 1f;
     public static Panparu Instance { get; private set; }
     readonly TimeSpan checkCareCooldown = new(0, 0, 1);
     readonly TimeSpan hungerCooldown = new(0, 0, 6);
     readonly TimeSpan attentionCooldown = new(0, 0, 12);
     readonly TimeSpan playCooldown = new(0, 0, 12);
 
-    private Age currentAge;
-    private CareType childCare;
-    private CareType currentCare; 
+    readonly TimeSpan eggToChild = new(0, 0, 24);
+    readonly TimeSpan childToAdult = new(0, 0, 60);
 
-    public GameObject feeling;
-    public Sprite goodSprite;
-    public Sprite okaySprite;
-    public Sprite badSprite;
-    public Sprite deadSprite;
+    [SerializeField] private CareType currentCare; 
+    [SerializeField] private CareType eggCare;
+    [SerializeField] private CareType childCare;
+    [SerializeField] private Age currentAge;
 
-    private SpriteRenderer sprRdr;
+    [SerializeField] private GameObject feeling;
+    [SerializeField] private Sprite goodSprite;
+    [SerializeField] private Sprite okaySprite;
+    [SerializeField] private Sprite badSprite;
+    [SerializeField] private Sprite deadSprite;
+    [SerializeField] private Sprite[] childSprites;
+    [SerializeField] private Sprite[] adultSpritesFromGood;
+    [SerializeField] private Sprite[] adultSpritesFromOkay;
+    [SerializeField] private Sprite[] adultSpritesFromBad;
+
+    private Image sprRdr;
 
     private Animator m_Animator;
 
@@ -50,14 +58,14 @@ public class Panparu : MonoBehaviour
         Instance = this;
         //NOTE these need to be saved and reloaded accurately on close
         birthTime = DateTime.Now;
-        currentAge = Age.Child;
+        currentAge = Age.Egg;
         //end note
         lastTimeHungry = DateTime.Now;
         lastTimeCheckCare = DateTime.Now;
         lastTimeAttention = DateTime.Now;
         lastTimePlay = DateTime.Now;
 
-        sprRdr = gameObject.GetComponent<SpriteRenderer>();
+        sprRdr = gameObject.GetComponent<Image>();
         m_Animator = gameObject.GetComponent<Animator>();
 
         Instance.GetComponent<Button>().onClick.AddListener(CheckEmotion);
@@ -81,7 +89,6 @@ public class Panparu : MonoBehaviour
         DateTime timeNow = DateTime.Now;
         //Get difference cooldown times
         TimeSpan timeSinceCheckCare = timeNow - lastTimeCheckCare;
-        TimeSpan timeSinceBirth = lastTimeCheckCare - birthTime;
 
         while (timeSinceCheckCare.CompareTo(checkCareCooldown) > 0)
         {
@@ -107,12 +114,25 @@ public class Panparu : MonoBehaviour
                     play -= 1;
                 lastTimePlay = lastTimePlay.Add(playCooldown);
             }
-
+            
             lastTimeCheckCare = lastTimeCheckCare.Add(checkCareCooldown);
+            TimeSpan timeSinceBirth = lastTimeCheckCare - birthTime;
             averageCare = (averageCare*timeSinceBirth.Seconds + CalcCare()) / (timeSinceBirth.Seconds+1);
-            print(averageCare);
             timeSinceCheckCare = timeNow - lastTimeCheckCare;
+            if (timeSinceBirth.CompareTo(eggToChild) > 0 && currentAge == Age.Egg) {
+                EvolveFromEggToChild();
+                averageCare = 1f;
+            }
+            if (timeSinceBirth.CompareTo(childToAdult) > 0 && currentAge == Age.Child) {
+                EvolveFromChildToAdult();
+                averageCare = 1f;
+            }
+            if(averageCare < 0)
+            {
+                Dead();
+            }
         }
+        //print(averageCare);
 
         /*
         SETTING ANIMATION SPEED DEPENDING ON HEALTH:
@@ -138,14 +158,6 @@ public class Panparu : MonoBehaviour
         {
             currentCare = CareType.Dead;
             //m_Animator.speed = .25f;
-        }
-        if ((timeSinceBirth.Seconds > 24 && currentAge == Age.Egg) || (timeSinceBirth.Seconds > 60 && currentAge == Age.Child))
-        {
-            Evolve();
-        }
-        if(averageCare < 0)
-        {
-            Dead();
         }
     }
 
@@ -221,77 +233,90 @@ public class Panparu : MonoBehaviour
         ShowFeeling(currentCare);
     }
 
-    void Evolve()
-    {
-        birthTime = DateTime.Now;
-        if (currentAge == Age.Egg)
+    void EvolveFromEggToChild(){
+        currentAge = Age.Child;
+        eggCare = currentCare;
+        switch (eggCare)
         {
-            currentAge = Age.Child;
-            if (currentCare == CareType.Good)
-            {
-                //set to CG
-                childCare = CareType.Good;
-
-            }
-            else if (currentCare == CareType.Okay)
-            {
-                //set to CO
-                childCare = CareType.Okay;
-            }
-            else
-            {
-                //set to CB
-                childCare = CareType.Bad;
-            }
+            case CareType.Good://CG
+                sprRdr.sprite = childSprites[0];
+                print("CG");
+                break;
+            case CareType.Okay://CO
+                sprRdr.sprite = childSprites[1];
+                print("CO");
+                break;
+            case CareType.Bad://CB
+                sprRdr.sprite = childSprites[2];
+                print("CB");
+                break;
         }
-        else
+    }
+    void EvolveFromChildToAdult(){
+        currentAge = Age.Adult;
+        childCare = currentCare;
+        switch (eggCare)
         {
-            currentAge = Age.Adult;
-            if (currentCare == CareType.Good)
-            {
-                if (childCare == CareType.Good)
-                {
-                    //set to AGG
-                }
-                else if (childCare == CareType.Okay)
-                {
-                    //set to AGO
-                }
-                else
-                {
-                    //set to AGB
-                }
-            }
-            else if (currentCare == CareType.Okay)
-            {
-                if (childCare == CareType.Good)
-                {
-                    //set to AOG
-                }
-                else if (childCare == CareType.Okay)
-                {
-                    //set to AOO
-                }
-                else
-                {
-                    //set to AOB
-                }
-            }
-            else
-            {
-                if (childCare == CareType.Good)
-                {
-                    //set to ABG
-                }
-                else if (childCare == CareType.Okay)
-                {
-                    //set to ABO
-                }
-                else
-                {
-                    //set to ABB
-                }
-            }
+            case CareType.Good://CG
+                EvolveFromGoodChildToAdult();
+                break;
+            case CareType.Okay://CO
+                EvolveFromOkayChildToAdult();
+                break;
+            case CareType.Bad://CB
+                EvolveFromBadChildToAdult();
+                break;             
+        }
+    }
+    void EvolveFromGoodChildToAdult(){
+        switch (childCare)
+        {
+            case CareType.Good://AGG
+                sprRdr.sprite = adultSpritesFromGood[0];
+                print("AGG");
+                break;
+            case CareType.Okay://AGO
+                sprRdr.sprite = adultSpritesFromGood[1];
+                print("AGO");
+                break;
+            case CareType.Bad://AGB
+                sprRdr.sprite = adultSpritesFromGood[2];
+                print("AGB");
+                break;
+        }
+    }
+    void EvolveFromOkayChildToAdult(){
+        switch (childCare)
+        {
+            case CareType.Good://AOG
+                sprRdr.sprite = adultSpritesFromOkay[0];
+                print("AOG");
+                break;
+            case CareType.Okay://AOO
+                sprRdr.sprite = adultSpritesFromOkay[1];
+                print("AOO");
+                break;
+            case CareType.Bad://AOB
+                sprRdr.sprite = adultSpritesFromOkay[2];
+                print("AOB");
+                break;
+        }
+    }
+    void EvolveFromBadChildToAdult(){
+        switch (childCare)
+        {
+            case CareType.Good://ABG
+                sprRdr.sprite = adultSpritesFromBad[0];
+                print("ABG");
+                break;
+            case CareType.Okay://ABO
+                sprRdr.sprite = adultSpritesFromBad[1];
+                print("ABO");
+                break;
+            case CareType.Bad://ABB
+                sprRdr.sprite = adultSpritesFromBad[2];
+                print("ABB");
+                break;
         }
     }
 

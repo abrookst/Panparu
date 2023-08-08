@@ -302,6 +302,22 @@ MonoBehaviour:
   okaySprite: {fileID: 21300000, guid: 38337e3d4b78ffb49a4ac09e85150f38, type: 3}
   badSprite: {fileID: 21300000, guid: 26ba44d97061d9c40ac64f29597cfd1f, type: 3}
   deadSprite: {fileID: 21300000, guid: 4e9552bd947b9fd4c8ff5a7724e3d4ad, type: 3}
+  childSprites:
+  - {fileID: 7482667652216324306, guid: 12c03815d71a52c4c9e0628cddad3c15, type: 3}
+  - {fileID: 7482667652216324306, guid: 12c03815d71a52c4c9e0628cddad3c15, type: 3}
+  - {fileID: 7482667652216324306, guid: 12c03815d71a52c4c9e0628cddad3c15, type: 3}
+  adultSpritesFromGood:
+  - {fileID: 21300000, guid: df2e70c9337b81949902dc15901ba1b4, type: 3}
+  - {fileID: 21300000, guid: df2e70c9337b81949902dc15901ba1b4, type: 3}
+  - {fileID: 21300000, guid: df2e70c9337b81949902dc15901ba1b4, type: 3}
+  adultSpritesFromOkay:
+  - {fileID: 21300000, guid: df2e70c9337b81949902dc15901ba1b4, type: 3}
+  - {fileID: 21300000, guid: df2e70c9337b81949902dc15901ba1b4, type: 3}
+  - {fileID: 21300000, guid: df2e70c9337b81949902dc15901ba1b4, type: 3}
+  adultSpritesFromBad:
+  - {fileID: 21300000, guid: df2e70c9337b81949902dc15901ba1b4, type: 3}
+  - {fileID: 21300000, guid: df2e70c9337b81949902dc15901ba1b4, type: 3}
+  - {fileID: 21300000, guid: df2e70c9337b81949902dc15901ba1b4, type: 3}
 --- !u!114 &155012506
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -878,7 +894,7 @@ Camera:
   far clip plane: 1000
   field of view: 34
   orthographic: 1
-  orthographic size: 0.32
+  orthographic size: 0.3272727
   m_Depth: -1
   m_CullingMask:
     serializedVersion: 2
