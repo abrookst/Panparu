@@ -132,7 +132,6 @@ public class Panparu : MonoBehaviour
     void ShowFeeling(string emotion)
     {
         feeling.SetActive(true);
-        print("SHOWING FEELING");
         if(emotion == "good"){
             feeling.GetComponent<Image>().sprite = goodSprite;
         }
@@ -154,7 +153,6 @@ public class Panparu : MonoBehaviour
 
     IEnumerator ShowFeelingCoroutine()
     {
-        print("COROUTINE");
         yield return new WaitForSeconds(2);
         feeling.SetActive(false);
     }
