@@ -264,7 +264,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: df2e70c9337b81949902dc15901ba1b4, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 3198555fb1191d3439e6848cae7c972f, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -1411,6 +1411,7 @@ MonoBehaviour:
   PlayButton: {fileID: 246297292}
   TimeButton: {fileID: 418560436}
   feeling: {fileID: 678589182}
+  isBusy: 0
 --- !u!1 &1056760370
 GameObject:
   m_ObjectHideFlags: 0
