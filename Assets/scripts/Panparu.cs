@@ -150,13 +150,12 @@ public class Panparu : MonoBehaviour
             feeling.GetComponent<Image>().sprite = deadSprite;
         }
         StartCoroutine(ShowFeelingCoroutine());
-        feeling.SetActive(false);
-        return;
     }
 
     IEnumerator ShowFeelingCoroutine()
     {
         print("COROUTINE");
         yield return new WaitForSeconds(2);
+        feeling.SetActive(false);
     }
 }
