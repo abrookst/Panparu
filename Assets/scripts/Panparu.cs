@@ -42,6 +42,8 @@ public class Panparu : MonoBehaviour
 
     public Sprite[] eggSprites;
 
+    public Sprite tombstone;
+
     public int GetFood(){
         return food;
     }
@@ -306,7 +308,7 @@ public class Panparu : MonoBehaviour
 
     void Dead()
     {
-        //Instance.GetComponent<Image>().sprite = tombstone;
+        Instance.GetComponent<Image>().sprite = tombstone;
         m_Animator.enabled = false;
         Button_Functions.Instance.ToggleButtons(false);
         Instance.GetComponent<Button>().onClick.RemoveListener(CheckEmotion);
