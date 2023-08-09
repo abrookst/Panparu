@@ -46,7 +46,6 @@ public class Panparu : MonoBehaviour
 
     public AudioClip happy;
     public AudioClip reject;
-    public AudioClip pet;
     public AudioSource panparuAudio;
 
     private Image sprRdr;
@@ -149,25 +148,30 @@ public class Panparu : MonoBehaviour
         SETTING ANIMATION SPEED DEPENDING ON HEALTH:
         Borked bc this slows down stuff besides panparu_shift. ill figure it out tomorrow *yawn*
         */
+        float tempSpeed;
         if (averageCare > .8)
         {
             currentCare = CareType.Good;
-            //m_Animator.speed = 1f;
+            tempSpeed = 1f;
         }
         else if (averageCare > .6)
         {
             currentCare = CareType.Okay;
-            //m_Animator.speed = .75f;
+            tempSpeed = .75f;
         }
         else if (averageCare > .4)
         {
             currentCare = CareType.Bad;
-            //m_Animator.speed = .5f;
+            tempSpeed = .5f;
         }
         else
         {
             currentCare = CareType.Dead;
-            //m_Animator.speed = .25f;
+            tempSpeed = .25f;
+        }
+        foreach(AnimationState state in GetComponent<Animation>())
+        {
+            state.speed = tempSpeed;
         }
     }
 
@@ -365,6 +369,7 @@ public class Panparu : MonoBehaviour
         attention = 1;
         play = 1;
         m_Animator.enabled = true;
+        Button_Functions.Instance.ToggleButtons(false);
         Start();
         Instance.GetComponent<Button>().onClick.RemoveListener(reset);
         Instance.GetComponent<Button>().onClick.AddListener(CheckEmotion);
