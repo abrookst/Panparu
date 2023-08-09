@@ -134,17 +134,15 @@ public class Panparu : MonoBehaviour
                 EvolveFromChildToAdult();
                 averageCare = 1f;
             }
-            if(averageCare < 0)
+            if(food < 0)
             {
                 Dead();
             }
         }
-        //print(averageCare);
 
         /*
         SETTING ANIMATION SPEED DEPENDING ON HEALTH:
         Borked bc this slows down stuff besides panparu_shift. ill figure it out tomorrow *yawn*
-        if(averageCare > .8){
         */
         if (averageCare > .8)
         {
@@ -337,6 +335,8 @@ public class Panparu : MonoBehaviour
     void reset(){
         birthTime = DateTime.Now;
         averageCare = 1f;
+        childCare = default;
+        eggCare = default;
         lastTimeHungry = default;
         lastTimeCheckCare = default;
         lastTimeAttention = default;
