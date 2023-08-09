@@ -44,6 +44,11 @@ public class Panparu : MonoBehaviour
     [SerializeField] private Sprite[] adultSpritesFromOkay;
     [SerializeField] private Sprite[] adultSpritesFromBad;
 
+    public AudioClip happy;
+    public AudioClip reject;
+    public AudioClip pet;
+    public AudioSource panparuAudio;
+
     private Image sprRdr;
 
     private Animator m_Animator;
@@ -177,9 +182,15 @@ public class Panparu : MonoBehaviour
             food += 1;
             lastTimeHungry = DateTime.Now;
             ShowFeeling(CareType.Good);
-        } else
+            panparuAudio.PlayOneShot(happy, 1f);
+        }
+        else
+        {
             ShowFeeling(CareType.Okay);
             Debug.Log("I'm full!");
+            panparuAudio.PlayOneShot(reject, 1f);
+        }
+            
     }
     public void Pet()
     {
@@ -189,7 +200,11 @@ public class Panparu : MonoBehaviour
             attention += 1;
         }
         else
+        {
             Debug.Log("I'm already happy!");
+        }
+        panparuAudio.PlayOneShot(happy, 1f);
+
     }
     public void Play()
     {
@@ -199,7 +214,10 @@ public class Panparu : MonoBehaviour
             play += 1;
         }
         else
+        {
             Debug.Log("I'm tired!");
+        }
+        panparuAudio.PlayOneShot(happy, 1f);
     }
 
     void ShowFeeling(CareType emotion)
@@ -207,6 +225,7 @@ public class Panparu : MonoBehaviour
         feeling.SetActive(true);
         if(emotion == CareType.Good){
             feeling.GetComponent<Image>().sprite = goodSprite;
+            panparuAudio.PlayOneShot(happy, 1f);
         }
         else if(emotion == CareType.Okay){
             feeling.GetComponent<Image>().sprite = okaySprite;
@@ -216,6 +235,7 @@ public class Panparu : MonoBehaviour
         }
         else if(emotion == CareType.Dead){
             feeling.GetComponent<Image>().sprite = deadSprite;
+            panparuAudio.PlayOneShot(reject, 1f);
         }
         else{
             Debug.LogError("Invalid Emotion");

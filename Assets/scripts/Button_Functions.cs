@@ -20,6 +20,9 @@ public class Button_Functions : MonoBehaviour
     [SerializeField] private Button PlayButton;
     [SerializeField] private Button TimeButton;
 
+    public AudioClip pet;
+    public AudioSource buttonAudio;
+
     public GameObject feeling;
     public bool isBusy = false;
 
@@ -52,7 +55,12 @@ public class Button_Functions : MonoBehaviour
         
         //Play rotate animation on Panparu
         Panparu.Instance.GetComponent<Animator>().SetTrigger("Feed");
-        yield return new WaitForSeconds(2);
+        yield return new WaitForSeconds(.5f);
+        buttonAudio.PlayOneShot(pet, 1f);
+        yield return new WaitForSeconds(1f);
+        buttonAudio.PlayOneShot(pet, 1f);
+        yield return new WaitForSeconds(.5f);
+
 
         food.SetActive(false);
 
@@ -83,6 +91,7 @@ public class Button_Functions : MonoBehaviour
         while (timesToPet > 0) {
             yield return new WaitUntil(() => petting);
             panparuButton.interactable = false;
+            buttonAudio.PlayOneShot(pet, 1f);
             petting = false;
             Panparu.Instance.GetComponent<Animator>().SetTrigger("Pet");
             yield return new WaitForSeconds(0.5f);
