@@ -334,6 +334,22 @@ public class Panparu : MonoBehaviour
         }
     }
 
+    void reset(){
+        birthTime = DateTime.Now;
+        averageCare = 1f;
+        lastTimeHungry = default;
+        lastTimeCheckCare = default;
+        lastTimeAttention = default;
+        lastTimePlay = default;
+        food = 4;
+        attention = 1;
+        play = 1;
+        m_Animator.enabled = true;
+        Start();
+        Instance.GetComponent<Button>().onClick.RemoveListener(reset);
+        Instance.GetComponent<Button>().onClick.AddListener(CheckEmotion);
+    }
+
     void Dead()
     {
         Instance.GetComponent<Image>().sprite = tombstone;
@@ -341,5 +357,7 @@ public class Panparu : MonoBehaviour
         Button_Functions.Instance.ToggleButtons(false);
         Instance.GetComponent<Button>().onClick.RemoveListener(CheckEmotion);
         //add a thing where, on click everything is reset
+        Instance.GetComponent<Button>().onClick.AddListener(reset);
+        
     }
 }
