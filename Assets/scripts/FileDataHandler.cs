@@ -18,12 +18,10 @@ public class FileDataHandler {
         if (File.Exists(filePath))
         {
             try {
-                using(FileStream fs = File.Open(filePath, FileMode.Open)) {
-                    using(StreamReader reader = new StreamReader(fs)) {
-                        string json = reader.ReadToEnd();
-                        panparuData = JsonUtility.FromJson<PanparuData>(json);
-                    }
-                }
+                using FileStream fs = File.Open(filePath, FileMode.Open);
+                using StreamReader reader = new(fs);
+                string json = reader.ReadToEnd();
+                panparuData = JsonUtility.FromJson<PanparuData>(json);
             }
             catch (Exception e) {
                 Debug.LogError("Error loading game data: " + e.Message);
@@ -41,11 +39,9 @@ public class FileDataHandler {
         try {
             Directory.CreateDirectory(Path.GetDirectoryName(filePath));
             string json = JsonUtility.ToJson(panparuData, true);
-            using(FileStream fs = File.Open(filePath, FileMode.Create)) {
-                using(StreamWriter writer = new StreamWriter(fs)) {
-                    writer.Write(json);
-                }
-            }
+            using FileStream fs = File.Open(filePath, FileMode.Create);
+            using StreamWriter writer = new(fs);
+            writer.Write(json);
         }
         catch (Exception e) {
             Debug.LogError("Error saving game data: " + e.Message);

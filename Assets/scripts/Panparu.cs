@@ -33,6 +33,7 @@ public class Panparu : MonoBehaviour
     [SerializeField] private CareType eggCare;
     [SerializeField] private CareType childCare;
     [SerializeField] private Age currentAge;
+    private int eggType;
 
     [SerializeField] private GameObject feeling;
     [SerializeField] private Sprite goodSprite;
@@ -82,30 +83,23 @@ public class Panparu : MonoBehaviour
         lastTimeCheckCare = new DateTime(data.lastTimeCheckCare);
         lastTimeAttention = new DateTime(data.lastTimeAttention);
         lastTimePlay = new DateTime(data.lastTimePlay);
+        eggType = data.eggType;
 
         sprRdr = gameObject.GetComponent<Image>();
         m_Animator = gameObject.GetComponent<Animator>();
         m_Animator.enabled = true;
 
         UpdateCurrentCare();
-        var timeNow = DateTime.Now;
-        print("Time now: " + timeNow.Second);
-        TimeSpan timeSinceBirth = timeNow - birthTime;
-        TimeSpan timeSinceHungry = timeNow - lastTimeHungry;
-        TimeSpan timeSinceAttention = timeNow - lastTimeAttention;
-        TimeSpan timeSincePlay = timeNow - lastTimePlay;
-        print("Time since birth: " + timeSinceBirth.Seconds + " seconds");
-        print("Time since hungry: " + timeSinceHungry.Seconds + " seconds");
-        print("Time since attention: " + timeSinceAttention.Seconds + " seconds");
-        print("Time since play: " + timeSincePlay.Seconds + " seconds");
-        //Calculate what sprite it should have
+
         if (currentCare == CareType.Dead) {
             initialized = true;
             return;
         }
         else if (currentAge == Age.Egg)
         {
-            sprRdr.sprite = eggSprites[0];
+            if (eggType == -1)
+                eggType = Random.Range(0, eggSprites.Length);
+            sprRdr.sprite = eggSprites[eggType];
         }
         else if (currentAge == Age.Child)
         {
@@ -178,19 +172,22 @@ public class Panparu : MonoBehaviour
         initialized = true;
     }
     public PanparuData GetPanparuData(){
-        PanparuData data = new PanparuData();
-        data.food = food;
-        data.attention = attention;
-        data.play = play;
-        data.averageCare = averageCare;
-        data.eggCare = eggCare;
-        data.childCare = childCare;
-        data.currentAge = currentAge;
-        data.birthTime = birthTime.Ticks;
-        data.lastTimeHungry = lastTimeHungry.Ticks;
-        data.lastTimeCheckCare = lastTimeCheckCare.Ticks;
-        data.lastTimeAttention = lastTimeAttention.Ticks;
-        data.lastTimePlay = lastTimePlay.Ticks;
+        PanparuData data = new()
+        {
+            food = food,
+            attention = attention,
+            play = play,
+            averageCare = averageCare,
+            eggCare = eggCare,
+            childCare = childCare,
+            currentAge = currentAge,
+            birthTime = birthTime.Ticks,
+            lastTimeHungry = lastTimeHungry.Ticks,
+            lastTimeCheckCare = lastTimeCheckCare.Ticks,
+            lastTimeAttention = lastTimeAttention.Ticks,
+            lastTimePlay = lastTimePlay.Ticks,
+            eggType = eggType
+        };
         return data;
     }
 
@@ -374,13 +371,6 @@ public class Panparu : MonoBehaviour
         if (Button_Functions.Instance.isBusy || isChecking)
             return;
         ShowFeeling(currentCare);
-    }
-
-    Sprite SetEgg()
-    {
-        int randEgg = Random.Range(0, 6);
-        print("Rand:" + randEgg);
-        return eggSprites[randEgg];
     }
 
     void EvolveFromEggToChild(){

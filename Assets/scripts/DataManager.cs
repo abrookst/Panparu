@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using System;
+using Random = UnityEngine.Random;
 [Serializable]
 public class PanparuData {
     [SerializeField] public int food = 4;
@@ -14,6 +15,7 @@ public class PanparuData {
     [SerializeField] public long lastTimeAttention;
     [SerializeField] public long lastTimePlay;
     [SerializeField] public float averageCare = 1f;
+    [SerializeField] public int eggType = -1;
 
     [SerializeField] public Panparu.CareType eggCare;
     [SerializeField] public Panparu.CareType childCare;
@@ -30,6 +32,7 @@ public class PanparuData {
         this.eggCare = Panparu.CareType.Good;
         this.childCare = Panparu.CareType.Good;
         this.currentAge = Panparu.Age.Egg;
+        this.eggType = -1;
     }
 }
 
