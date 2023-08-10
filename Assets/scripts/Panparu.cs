@@ -85,6 +85,7 @@ public class Panparu : MonoBehaviour
 
         sprRdr = gameObject.GetComponent<Image>();
         m_Animator = gameObject.GetComponent<Animator>();
+        m_Animator.enabled = true;
 
         UpdateCurrentCare();
         //Calculate what sprite it should have
@@ -175,11 +176,11 @@ public class Panparu : MonoBehaviour
         data.eggCare = eggCare;
         data.childCare = childCare;
         data.currentAge = currentAge;
-        data.birthTime = birthTime.Second;
-        data.lastTimeHungry = lastTimeHungry.Second;
-        data.lastTimeCheckCare = lastTimeCheckCare.Second;
-        data.lastTimeAttention = lastTimeAttention.Second;
-        data.lastTimePlay = lastTimePlay.Second;
+        data.birthTime = birthTime.Ticks;
+        data.lastTimeHungry = lastTimeHungry.Ticks;
+        data.lastTimeCheckCare = lastTimeCheckCare.Ticks;
+        data.lastTimeAttention = lastTimeAttention.Ticks;
+        data.lastTimePlay = lastTimePlay.Ticks;
         return data;
     }
 
@@ -206,8 +207,7 @@ public class Panparu : MonoBehaviour
 
         while (timeSinceCheckCare.CompareTo(checkCareCooldown) > 0)
         {
-            if (currentCare == CareType.Dead)
-            {
+            if (currentCare == CareType.Dead) {
                 return;
             }
             TimeSpan timeSinceHungry = timeNow - lastTimeHungry;
@@ -477,22 +477,10 @@ public class Panparu : MonoBehaviour
         }
     }
 
-    void reset(){
-        birthTime = DateTime.Now;
-        averageCare = 1f;
-        childCare = default;
-        eggCare = default;
-        lastTimeHungry = default;
-        lastTimeCheckCare = default;
-        lastTimeAttention = default;
-        lastTimePlay = default;
-        food = 4;
-        attention = 1;
-        play = 1;
-        m_Animator.enabled = true;
+    void Reset(){
         Button_Functions.Instance.ToggleButtons(true);
         DataManager.Instance.NewGame();
-        Instance.GetComponent<Button>().onClick.RemoveListener(reset);
+        Instance.GetComponent<Button>().onClick.RemoveListener(Reset);
         Instance.GetComponent<Button>().onClick.AddListener(CheckEmotion);
     }
 
@@ -503,7 +491,7 @@ public class Panparu : MonoBehaviour
         Button_Functions.Instance.ToggleButtons(false);
         Instance.GetComponent<Button>().onClick.RemoveListener(CheckEmotion);
         //add a thing where, on click everything is reset
-        Instance.GetComponent<Button>().onClick.AddListener(reset);
+        Instance.GetComponent<Button>().onClick.AddListener(Reset);
         
     }
 }
