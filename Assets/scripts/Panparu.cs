@@ -88,6 +88,16 @@ public class Panparu : MonoBehaviour
         m_Animator.enabled = true;
 
         UpdateCurrentCare();
+        var timeNow = DateTime.Now;
+        print("Time now: " + timeNow.Second);
+        TimeSpan timeSinceBirth = timeNow - birthTime;
+        TimeSpan timeSinceHungry = timeNow - lastTimeHungry;
+        TimeSpan timeSinceAttention = timeNow - lastTimeAttention;
+        TimeSpan timeSincePlay = timeNow - lastTimePlay;
+        print("Time since birth: " + timeSinceBirth.Seconds + " seconds");
+        print("Time since hungry: " + timeSinceHungry.Seconds + " seconds");
+        print("Time since attention: " + timeSinceAttention.Seconds + " seconds");
+        print("Time since play: " + timeSincePlay.Seconds + " seconds");
         //Calculate what sprite it should have
         if (currentCare == CareType.Dead) {
             initialized = true;
@@ -198,12 +208,11 @@ public class Panparu : MonoBehaviour
             if (currentCare == CareType.Dead) {
                 return;
             }
-            TimeSpan timeSinceHungry = timeNow - lastTimeHungry;
-            TimeSpan timeSinceAttention = timeNow - lastTimeAttention;
-            TimeSpan timeSincePlay = timeNow - lastTimePlay;
-            print("Time since hungry: " + timeSinceHungry.Seconds + " seconds");
-            print("Time since attention: " + timeSinceAttention.Seconds + " seconds");
-            print("Time since play: " + timeSincePlay.Seconds + " seconds");
+            lastTimeCheckCare = lastTimeCheckCare.Add(checkCareCooldown);
+
+            TimeSpan timeSinceHungry = lastTimeCheckCare - lastTimeHungry;
+            TimeSpan timeSinceAttention = lastTimeCheckCare - lastTimeAttention;
+            TimeSpan timeSincePlay = lastTimeCheckCare - lastTimePlay;
             if (timeSinceHungry.CompareTo(hungerCooldown) > 0) {
                 food -= 1;
                 lastTimeHungry = lastTimeHungry.Add(hungerCooldown);
@@ -224,8 +233,8 @@ public class Panparu : MonoBehaviour
                 lastTimePlay = lastTimePlay.Add(playCooldown);
             }
             
-            lastTimeCheckCare = lastTimeCheckCare.Add(checkCareCooldown);
             TimeSpan timeSinceBirth = lastTimeCheckCare - birthTime;
+            print("TimeSPAN since birth: " + timeSinceBirth.Seconds + " seconds");
             averageCare = (averageCare*timeSinceBirth.Seconds + CalcCare()) / (timeSinceBirth.Seconds+1);
             timeSinceCheckCare = timeNow - lastTimeCheckCare;
             
@@ -478,6 +487,9 @@ public class Panparu : MonoBehaviour
 
     void Dead()
     {
+        //Print current age in seconds
+        Debug.Log("I died at " + (DateTime.Now - birthTime).TotalSeconds + " seconds old");
+
         Instance.GetComponent<Image>().sprite = tombstone;
         m_Animator.enabled = false;
         Button_Functions.Instance.ToggleButtons(false);
