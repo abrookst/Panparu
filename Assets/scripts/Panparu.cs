@@ -82,15 +82,88 @@ public class Panparu : MonoBehaviour
         lastTimeCheckCare = new DateTime(data.birthTime);
         lastTimeAttention = new DateTime(data.birthTime);
         lastTimePlay = new DateTime(data.birthTime);
-        UpdateCurrentCare();
 
         sprRdr = gameObject.GetComponent<Image>();
         m_Animator = gameObject.GetComponent<Animator>();
-    
-        Instance.GetComponent<Image>().sprite = SetEgg();
+
+        UpdateCurrentCare();
+        //Calculate what sprite it should have
+        if (currentCare == CareType.Dead) {
+            initialized = true;
+            return;
+        }
+        else if (currentAge == Age.Egg)
+        {
+            sprRdr.sprite = eggSprites[0];
+        }
+        else if (currentAge == Age.Child)
+        {
+            //Calculate what sprite it should have based on how it was treated in the egg
+            if (eggCare == CareType.Good)
+            {
+                sprRdr.sprite = childSprites[0];
+            }
+            else if (eggCare == CareType.Okay)
+            {
+                sprRdr.sprite = childSprites[1];
+            }
+            else if (eggCare == CareType.Bad)
+            {
+                sprRdr.sprite = childSprites[2];
+            }
+        }
+        else
+        {
+            //Calculate what sprite it should have based on how it was treated in the egg and as a child
+            if (eggCare == CareType.Good)
+            {
+                if (childCare == CareType.Good)
+                {
+                    sprRdr.sprite = adultSpritesFromGood[0];
+                }
+                else if (childCare == CareType.Okay)
+                {
+                    sprRdr.sprite = adultSpritesFromGood[1];
+                }
+                else if (childCare == CareType.Bad)
+                {
+                    sprRdr.sprite = adultSpritesFromGood[2];
+                }
+            }
+            else if (eggCare == CareType.Okay)
+            {
+                if (childCare == CareType.Good)
+                {
+                    sprRdr.sprite = adultSpritesFromOkay[0];
+                }
+                else if (childCare == CareType.Okay)
+                {
+                    sprRdr.sprite = adultSpritesFromOkay[1];
+                }
+                else if (childCare == CareType.Bad)
+                {
+                    sprRdr.sprite = adultSpritesFromOkay[2];
+                }
+            }
+            else if (eggCare == CareType.Bad)
+            {
+                if (childCare == CareType.Good)
+                {
+                    sprRdr.sprite = adultSpritesFromBad[0];
+                }
+                else if (childCare == CareType.Okay)
+                {
+                    sprRdr.sprite = adultSpritesFromBad[1];
+                }
+                else if (childCare == CareType.Bad)
+                {
+                    sprRdr.sprite = adultSpritesFromBad[2];
+                }
+            }
+        }
 
         Instance.GetComponent<Button>().onClick.AddListener(CheckEmotion);
-
+        
         initialized = true;
     }
     public PanparuData GetPanparuData(){
@@ -133,6 +206,10 @@ public class Panparu : MonoBehaviour
 
         while (timeSinceCheckCare.CompareTo(checkCareCooldown) > 0)
         {
+            if (currentCare == CareType.Dead)
+            {
+                return;
+            }
             TimeSpan timeSinceHungry = timeNow - lastTimeHungry;
             TimeSpan timeSinceAttention = timeNow - lastTimeAttention;
             TimeSpan timeSincePlay = timeNow - lastTimePlay;
@@ -203,6 +280,7 @@ public class Panparu : MonoBehaviour
         {
             currentCare = CareType.Dead;
             tempSpeed = .25f;
+            Dead();
         }
         foreach(AnimationState state in GetComponent<Animation>())
         {
@@ -305,6 +383,10 @@ public class Panparu : MonoBehaviour
     }
 
     void EvolveFromEggToChild(){
+        if (currentCare == CareType.Dead)
+        {
+            return;
+        }
         currentAge = Age.Child;
         eggCare = currentCare;
         switch (eggCare)
@@ -324,6 +406,10 @@ public class Panparu : MonoBehaviour
         }
     }
     void EvolveFromChildToAdult(){
+        if (currentCare == CareType.Dead)
+        {
+            return;
+        }
         currentAge = Age.Adult;
         childCare = currentCare;
         switch (eggCare)
@@ -404,7 +490,7 @@ public class Panparu : MonoBehaviour
         attention = 1;
         play = 1;
         m_Animator.enabled = true;
-        Button_Functions.Instance.ToggleButtons(false);
+        Button_Functions.Instance.ToggleButtons(true);
         DataManager.Instance.NewGame();
         Instance.GetComponent<Button>().onClick.RemoveListener(reset);
         Instance.GetComponent<Button>().onClick.AddListener(CheckEmotion);

@@ -26,7 +26,7 @@ public class Button_Functions : MonoBehaviour
     public GameObject feeling;
     public bool isBusy = false;
 
-    void Start()
+    void Awake()
     {
         Instance = this;
     }
