@@ -11,8 +11,8 @@ public class Panparu : MonoBehaviour
     [SerializeField] private int attention = 1;
     [SerializeField] private int play = 1;
 
-    enum CareType { Good, Okay, Bad, Dead};
-    enum Age { Egg, Child, Adult };
+    public enum CareType { Good, Okay, Bad, Dead};
+    public enum Age { Egg, Child, Adult };
 
     private DateTime birthTime;
     private DateTime lastTimeHungry;
@@ -58,32 +58,62 @@ public class Panparu : MonoBehaviour
 
     public Sprite tombstone;
 
+    public bool initialized = false;
+
     public int GetFood(){
         return food;
     }
 
-    void Start()
+    void Awake()
     {
         Instance = this;
+    }
+    public void Initialize(PanparuData data){
         //NOTE these need to be saved and reloaded accurately on close
-        birthTime = DateTime.Now;
-        currentAge = Age.Egg;
-        //end note
-        lastTimeHungry = DateTime.Now;
-        lastTimeCheckCare = DateTime.Now;
-        lastTimeAttention = DateTime.Now;
-        lastTimePlay = DateTime.Now;
+        food = data.food;
+        attention = data.attention;
+        play = data.play;
+        averageCare = data.averageCare;
+        eggCare = data.eggCare;
+        childCare = data.childCare;
+        currentAge = data.currentAge;
+        birthTime = new DateTime(data.birthTime);
+        lastTimeHungry = new DateTime(data.birthTime);
+        lastTimeCheckCare = new DateTime(data.birthTime);
+        lastTimeAttention = new DateTime(data.birthTime);
+        lastTimePlay = new DateTime(data.birthTime);
+        UpdateCurrentCare();
 
         sprRdr = gameObject.GetComponent<Image>();
         m_Animator = gameObject.GetComponent<Animator>();
-
+    
         Instance.GetComponent<Image>().sprite = SetEgg();
 
         Instance.GetComponent<Button>().onClick.AddListener(CheckEmotion);
+
+        initialized = true;
+    }
+    public PanparuData GetPanparuData(){
+        PanparuData data = new PanparuData();
+        data.food = food;
+        data.attention = attention;
+        data.play = play;
+        data.averageCare = averageCare;
+        data.eggCare = eggCare;
+        data.childCare = childCare;
+        data.currentAge = currentAge;
+        data.birthTime = birthTime.Second;
+        data.lastTimeHungry = lastTimeHungry.Second;
+        data.lastTimeCheckCare = lastTimeCheckCare.Second;
+        data.lastTimeAttention = lastTimeAttention.Second;
+        data.lastTimePlay = lastTimePlay.Second;
+        return data;
     }
 
     void Update() 
     {
+        if (!initialized)
+            return;
         #if UNITY_EDITOR //Fix bug with reloading scripts in editor causing variables to reset, which causes Panparu to loose tons of hunger
         if (Instance == null)
             Instance = this;
@@ -130,6 +160,9 @@ public class Panparu : MonoBehaviour
             TimeSpan timeSinceBirth = lastTimeCheckCare - birthTime;
             averageCare = (averageCare*timeSinceBirth.Seconds + CalcCare()) / (timeSinceBirth.Seconds+1);
             timeSinceCheckCare = timeNow - lastTimeCheckCare;
+            
+            UpdateCurrentCare();
+
             if (timeSinceBirth.CompareTo(eggToChild) > 0 && currentAge == Age.Egg) {
                 EvolveFromEggToChild();
                 averageCare = 1f;
@@ -148,6 +181,8 @@ public class Panparu : MonoBehaviour
         SETTING ANIMATION SPEED DEPENDING ON HEALTH:
         Borked bc this slows down stuff besides panparu_shift. ill figure it out tomorrow *yawn*
         */
+    }
+    private void UpdateCurrentCare() {
         float tempSpeed;
         if (averageCare > .8)
         {
@@ -370,7 +405,7 @@ public class Panparu : MonoBehaviour
         play = 1;
         m_Animator.enabled = true;
         Button_Functions.Instance.ToggleButtons(false);
-        Start();
+        DataManager.Instance.NewGame();
         Instance.GetComponent<Button>().onClick.RemoveListener(reset);
         Instance.GetComponent<Button>().onClick.AddListener(CheckEmotion);
     }
