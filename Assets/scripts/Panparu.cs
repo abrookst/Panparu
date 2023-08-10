@@ -78,10 +78,10 @@ public class Panparu : MonoBehaviour
         childCare = data.childCare;
         currentAge = data.currentAge;
         birthTime = new DateTime(data.birthTime);
-        lastTimeHungry = new DateTime(data.birthTime);
-        lastTimeCheckCare = new DateTime(data.birthTime);
-        lastTimeAttention = new DateTime(data.birthTime);
-        lastTimePlay = new DateTime(data.birthTime);
+        lastTimeHungry = new DateTime(data.lastTimeHungry);
+        lastTimeCheckCare = new DateTime(data.lastTimeCheckCare);
+        lastTimeAttention = new DateTime(data.lastTimeAttention);
+        lastTimePlay = new DateTime(data.lastTimePlay);
 
         sprRdr = gameObject.GetComponent<Image>();
         m_Animator = gameObject.GetComponent<Animator>();
@@ -188,18 +188,6 @@ public class Panparu : MonoBehaviour
     {
         if (!initialized)
             return;
-        #if UNITY_EDITOR //Fix bug with reloading scripts in editor causing variables to reset, which causes Panparu to loose tons of hunger
-        if (Instance == null)
-            Instance = this;
-        if (lastTimeHungry == default)
-            lastTimeHungry = DateTime.Now;
-        if (lastTimeCheckCare == default)
-            lastTimeCheckCare = DateTime.Now;
-        if (lastTimeAttention == default)
-            lastTimeAttention = DateTime.Now;
-        if (lastTimePlay == default)
-            lastTimePlay = DateTime.Now;
-        #endif
 
         DateTime timeNow = DateTime.Now;
         //Get difference cooldown times
@@ -213,6 +201,9 @@ public class Panparu : MonoBehaviour
             TimeSpan timeSinceHungry = timeNow - lastTimeHungry;
             TimeSpan timeSinceAttention = timeNow - lastTimeAttention;
             TimeSpan timeSincePlay = timeNow - lastTimePlay;
+            print("Time since hungry: " + timeSinceHungry.Seconds + " seconds");
+            print("Time since attention: " + timeSinceAttention.Seconds + " seconds");
+            print("Time since play: " + timeSincePlay.Seconds + " seconds");
             if (timeSinceHungry.CompareTo(hungerCooldown) > 0) {
                 food -= 1;
                 lastTimeHungry = lastTimeHungry.Add(hungerCooldown);
@@ -250,6 +241,7 @@ public class Panparu : MonoBehaviour
             }
             if(food < 0)
             {
+                currentCare = CareType.Dead;
                 Dead();
             }
         }
