@@ -9,9 +9,9 @@ public class MinigameManager : MonoBehaviour
     [SerializeField] private GameObject PanparuPlayer;
     [SerializeField] private GameObject PantrisBorder;
     public static float moveTime = 0.04f;
-    public static float dropTime = 1f;
+    public static float dropTime = 0.6f;
     public static float fallTime = 0.02f;
-    public static int minX = -28, maxX = -8, minY = -20, maxY = 18;
+    public static int minX = -28, maxX = -8, minY = -20, maxY = 20;
     [SerializeField] GameObject[] blocks;
     public static Transform[,] grid;
     public static MinigameManager Instance{get; private set;}
@@ -29,7 +29,6 @@ public class MinigameManager : MonoBehaviour
     void OnEnable()
     {
         grid = new Transform[(maxX - minX) / 2, (maxY - minY) / 2];
-        print(grid.GetLength(0) + "x" + grid.GetLength(1));
         SpawnBlock();
         Button_Functions.Instance.isBusy=true;
     }
@@ -40,11 +39,12 @@ public class MinigameManager : MonoBehaviour
 
     public void SpawnBlock()
     {
+        dropTime *= 0.95f;
         float guess = Random.Range(0f, 1f);
         guess *= blocks.Length;
         int index = Mathf.FloorToInt(guess);
         GameObject newBlock = Instantiate(blocks[index], PantrisBorder.transform, false);
-        newBlock.transform.localPosition = new Vector3(12, 36, 0);
+        newBlock.transform.localPosition = new Vector3(10, 36, 0);
     }
     public void CheckLines() {
         for (int y = 0; y < grid.GetLength(1); y++) {
@@ -106,5 +106,8 @@ public class MinigameManager : MonoBehaviour
         MiniGame.SetActive(false);
         Panparu.Instance.Play();
         Button_Functions.Instance.isBusy=false;
+        foreach (Transform child in PantrisBorder.transform) {
+            Destroy(child.gameObject);
+        }
     }
 }

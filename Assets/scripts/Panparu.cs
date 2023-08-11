@@ -299,6 +299,9 @@ public class Panparu : MonoBehaviour
 
     public void Feed()
     {
+        if (currentCare == CareType.Dead) {
+            return;
+        }
         if (food < 4) {
             food += 1;
             lastTimeHungry = DateTime.Now;
@@ -316,6 +319,9 @@ public class Panparu : MonoBehaviour
     }
     public void Pet()
     {
+        if (currentCare == CareType.Dead) {
+            return;
+        }
         lastTimeAttention = DateTime.Now;
         ShowFeeling(CareType.Good);
         if (attention < 1) {
@@ -331,6 +337,9 @@ public class Panparu : MonoBehaviour
     }
     public void Play()
     {
+        if (currentCare == CareType.Dead) {
+            return;
+        }
         lastTimePlay = DateTime.Now;
         ShowFeeling(CareType.Good);
         if (play < 1) {
@@ -384,8 +393,7 @@ public class Panparu : MonoBehaviour
     }
 
     void EvolveFromEggToChild(){
-        if (currentCare == CareType.Dead)
-        {
+        if (currentCare == CareType.Dead) {
             return;
         }
         currentAge = Age.Child;
@@ -480,6 +488,10 @@ public class Panparu : MonoBehaviour
 
     IEnumerator ShowHappy()
     {
+        if (currentCare == CareType.Dead)
+        {
+            yield break;
+        }
         if(currentAge == Age.Egg)
         {
             yield break;
