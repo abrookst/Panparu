@@ -44,7 +44,7 @@ public class MinigameManager : MonoBehaviour
         guess *= blocks.Length;
         int index = Mathf.FloorToInt(guess);
         GameObject newBlock = Instantiate(blocks[index], PantrisBorder.transform, false);
-        newBlock.transform.localPosition = new Vector3(12, 36, 0);
+        newBlock.transform.localPosition = new Vector3(10, 36, 0);
     }
     public void CheckLines() {
         for (int y = 0; y < grid.GetLength(1); y++) {
@@ -106,5 +106,8 @@ public class MinigameManager : MonoBehaviour
         MiniGame.SetActive(false);
         Panparu.Instance.Play();
         Button_Functions.Instance.isBusy=false;
+        foreach (Transform child in PantrisBorder.transform) {
+            Destroy(child.gameObject);
+        }
     }
 }
