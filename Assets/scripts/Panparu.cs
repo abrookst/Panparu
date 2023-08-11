@@ -91,6 +91,15 @@ public class Panparu : MonoBehaviour
 
         UpdateCurrentCare();
 
+        RecalcSprite();
+
+        Instance.GetComponent<Button>().onClick.AddListener(CheckEmotion);
+        
+        initialized = true;
+    }
+
+    void RecalcSprite()
+    {
         if (currentCare == CareType.Dead) {
             initialized = true;
             return;
@@ -166,11 +175,8 @@ public class Panparu : MonoBehaviour
                 }
             }
         }
-
-        Instance.GetComponent<Button>().onClick.AddListener(CheckEmotion);
-        
-        initialized = true;
     }
+
     public PanparuData GetPanparuData(){
         PanparuData data = new()
         {
@@ -474,12 +480,15 @@ public class Panparu : MonoBehaviour
 
     IEnumerator ShowHappy()
     {
-        Sprite curSprite = Instance.GetComponent<Image>().sprite;
-        var sp = Resources.Load(Instance.GetComponent<Image>().sprite.name + "(H)") as Sprite;
-        print(Instance.GetComponent<Image>().sprite.name + "(H)");
-        Instance.GetComponent<Image>().sprite = sp;
+        if(currentAge == Age.Egg)
+        {
+            yield break;
+        }
+        Sprite sp = Resources.Load<Sprite>(Instance.GetComponent<Image>().sprite.name + "(H)") as Sprite;
+        print("sp: "+sp.name);
+        sprRdr.sprite = sp;
         yield return new WaitForSeconds(1);
-        Instance.GetComponent<Image>().sprite = curSprite;
+        RecalcSprite();
     }
 
     void Reset(){
@@ -499,7 +508,6 @@ public class Panparu : MonoBehaviour
         m_Animator.enabled = false;
         Button_Functions.Instance.ToggleButtons(false);
         Instance.GetComponent<Button>().onClick.RemoveListener(CheckEmotion);
-        //add a thing where, on click everything is reset
         Instance.GetComponent<Button>().onClick.AddListener(Reset);
         
     }
