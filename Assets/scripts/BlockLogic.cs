@@ -77,8 +77,8 @@ public class BlockLogic : MonoBehaviour
         if (!moveable) return;
         if (moveTimer > MinigameManager.moveTime) {
             RectTransformUtility.ScreenPointToLocalPointInRectangle(canvas.transform as RectTransform, Input.mousePosition, canvas.worldCamera, out Vector2 pos);
-            bool left = transform.position.x > canvas.transform.TransformPoint(pos).x + (2 * canvas.scaleFactor);
-            bool right = transform.position.x < canvas.transform.TransformPoint(pos).x - (2 * canvas.scaleFactor);
+            bool left = transform.position.x > canvas.transform.TransformPoint(pos).x + (1 * canvas.scaleFactor);
+            bool right = transform.position.x < canvas.transform.TransformPoint(pos).x - (1 * canvas.scaleFactor);
 
             if (left) {
                 gameObject.transform.position += new Vector3(-2, 0, 0) * canvas.scaleFactor;
