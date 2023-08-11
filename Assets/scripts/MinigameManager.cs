@@ -11,7 +11,7 @@ public class MinigameManager : MonoBehaviour
     public static float moveTime = 0.04f;
     public static float dropTime = 1f;
     public static float fallTime = 0.02f;
-    public static int minX = -28, maxX = -8, minY = -20, maxY = 18;
+    public static int minX = -28, maxX = -8, minY = -20, maxY = 20;
     [SerializeField] GameObject[] blocks;
     public static Transform[,] grid;
     public static MinigameManager Instance{get; private set;}
@@ -40,6 +40,7 @@ public class MinigameManager : MonoBehaviour
 
     public void SpawnBlock()
     {
+        dropTime *= 0.9f;
         float guess = Random.Range(0f, 1f);
         guess *= blocks.Length;
         int index = Mathf.FloorToInt(guess);
