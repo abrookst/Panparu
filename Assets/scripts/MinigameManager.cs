@@ -19,6 +19,9 @@ public class MinigameManager : MonoBehaviour
     public static Transform[,] grid;
     int score = 0;
     public static MinigameManager Instance{get; private set;}
+    public AudioClip pieceLand;
+    public AudioClip lineClear;
+    public AudioClip pieceRotate;
     /// <summary>
     /// Awake is called when the script instance is being loaded.
     /// </summary>
@@ -71,6 +74,7 @@ public class MinigameManager : MonoBehaviour
             }
         }
         if (linesCleared > 0) {
+            Instance.GetComponent<AudioSource>().PlayOneShot(Instance.lineClear);
             PanparuPlayer.GetComponent<Animator>().SetTrigger("LinesCleared");
             if (linesCleared == 1) score += 100;
             else if (linesCleared == 2) score += 300;

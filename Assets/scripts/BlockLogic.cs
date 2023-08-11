@@ -117,6 +117,7 @@ public class BlockLogic : MonoBehaviour
         
         //Rotate
         if (Input.GetMouseButtonDown(1)) {
+            MinigameManager.Instance.GetComponent<AudioSource>().PlayOneShot(MinigameManager.Instance.pieceRotate);
             rig.eulerAngles -= new Vector3(0, 0, 90);
             if (!CheckValid()) {
                 rig.eulerAngles += new Vector3(0, 0, 90);
@@ -140,6 +141,7 @@ public class BlockLogic : MonoBehaviour
 
     void BlockLanded() {
         moveable = false;
+        MinigameManager.Instance.GetComponent<AudioSource>().PlayOneShot(MinigameManager.Instance.pieceLand);
         foreach (Transform subBlock in rig) {
             Vector2 gridPos = MinigameManager.Instance.ConvertPosToGridCoordinates(subBlock.position);
             MinigameManager.grid[(int)gridPos.x, (int)gridPos.y] = subBlock;
