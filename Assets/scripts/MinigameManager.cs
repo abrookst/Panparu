@@ -76,12 +76,24 @@ public class MinigameManager : MonoBehaviour
         }
         if (linesCleared > 0) {
             Instance.GetComponent<AudioSource>().PlayOneShot(Instance.lineClear);
+            StartCoroutine(ShowHappy());
             PanparuPlayer.GetComponent<Animator>().SetTrigger("LinesCleared");
             if (linesCleared == 1) score += 100;
             else if (linesCleared == 2) score += 300;
             else if (linesCleared == 3) score += 500;
             else if (linesCleared == 4) score += 800;
             scoreText.text = score.ToString();
+        }
+    }
+    IEnumerator ShowHappy()
+    {
+        var image = PanparuPlayer.GetComponent<Image>();
+        var oldSprite = image.sprite;
+        Sprite sp = Resources.Load<Sprite>(PanparuPlayer.GetComponent<Image>().sprite.name + "(H)") as Sprite;
+        if (sp != null) {
+            image.sprite = sp;
+            yield return new WaitForSeconds(1);
+            image.sprite = oldSprite;
         }
     }
 

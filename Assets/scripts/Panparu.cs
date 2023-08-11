@@ -497,6 +497,10 @@ public class Panparu : MonoBehaviour
             yield break;
         }
         Sprite sp = Resources.Load<Sprite>(Instance.GetComponent<Image>().sprite.name + "(H)") as Sprite;
+        if (currentCare == CareType.Dead)
+        {
+            yield break;
+        }
         print("sp: "+sp.name);
         sprRdr.sprite = sp;
         yield return new WaitForSeconds(1);
