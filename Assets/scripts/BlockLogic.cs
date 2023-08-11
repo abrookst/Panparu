@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class BlockLogic : MonoBehaviour
 {
@@ -9,7 +10,8 @@ public class BlockLogic : MonoBehaviour
     float dropTimer;
     float fallTimer;
     bool moveable = true;
-    [SerializeField] RectTransform rig;
+    public RectTransform rig;
+    BlockLogic ghost;
     // Start is called before the first frame update
     void Start()
     {
@@ -40,9 +42,17 @@ public class BlockLogic : MonoBehaviour
                 MinigameManager.grid[(int)gridPos.x, (int)gridPos.y] = subBlock;
             }
             MinigameManager.Instance.GameOver();
+            return;
         }
+
+        ghost = Instantiate(gameObject, transform.position, transform.rotation, transform.parent).GetComponent<BlockLogic>();
+        ghost.enabled = false;
+        foreach (Transform subBlock in ghost.rig) {
+            subBlock.GetComponent<Image>().color = new Color(1, 1, 1, 0.5f);
+        }
+        
     }
-    bool CheckValid() {
+    public bool CheckValid() {
         foreach (Transform subBlock in rig) {
             Vector3 pos = subBlock.position;
             Vector2 gridPos = MinigameManager.Instance.ConvertPosToGridCoordinates(pos);
@@ -117,6 +127,15 @@ public class BlockLogic : MonoBehaviour
         moveTimer += Time.deltaTime;
         dropTimer += Time.deltaTime;
         fallTimer += Time.deltaTime;
+
+        if (ghost == null) return;
+        //Ghost
+        ghost.transform.position = transform.position;
+        ghost.rig.eulerAngles = rig.eulerAngles;
+        while (ghost.CheckValid()) {
+            ghost.transform.position += new Vector3(0, -2, 0) * canvas.scaleFactor;
+        }
+        ghost.transform.position += new Vector3(0, 2, 0) * canvas.scaleFactor;
     }
 
     void BlockLanded() {
@@ -127,6 +146,8 @@ public class BlockLogic : MonoBehaviour
         }
         MinigameManager.Instance.CheckLines();
         MinigameManager.Instance.SpawnBlock();
+        Destroy(ghost.gameObject);
+        ghost = null;
     }
 
 }
