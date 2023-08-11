@@ -11,6 +11,7 @@ public class Button_Functions : MonoBehaviour
     [SerializeField] private GameObject food;
     [SerializeField] private GameObject petClick;
     [SerializeField] private GameObject playClick;
+    [SerializeField] private GameObject minigame;
 
     public static Button_Functions Instance { get; private set; }
 
@@ -35,6 +36,10 @@ public class Button_Functions : MonoBehaviour
     public void ToggleTime()
     {
         clock.SetActive(!clock.activeInHierarchy);
+    }
+    public void ToggleMinigame()
+    {
+        minigame.SetActive(!minigame.activeInHierarchy);
     }
 
     public void Feed() {
