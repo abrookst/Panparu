@@ -231,7 +231,7 @@ public class Panparu : MonoBehaviour
             }
             
             TimeSpan timeSinceBirth = lastTimeCheckCare - birthTime;
-            print("TimeSPAN since birth: " + timeSinceBirth.Seconds + " seconds");
+            //print("TimeSPAN since birth: " + timeSinceBirth.Seconds + " seconds");
             averageCare = (averageCare * (float)timeSinceBirth.TotalSeconds + CalcCare()) / ((float)timeSinceBirth.TotalSeconds + 1);
             timeSinceCheckCare = timeNow - lastTimeCheckCare;
             
@@ -298,6 +298,7 @@ public class Panparu : MonoBehaviour
             lastTimeHungry = DateTime.Now;
             ShowFeeling(CareType.Good);
             panparuAudio.PlayOneShot(happy, 1f);
+            StartCoroutine(ShowHappy());
         }
         else
         {
@@ -319,6 +320,7 @@ public class Panparu : MonoBehaviour
             Debug.Log("I'm already happy!");
         }
         panparuAudio.PlayOneShot(happy, 1f);
+        StartCoroutine(ShowHappy());
 
     }
     public void Play()
@@ -333,6 +335,7 @@ public class Panparu : MonoBehaviour
             Debug.Log("I'm tired!");
         }
         panparuAudio.PlayOneShot(happy, 1f);
+        StartCoroutine(ShowHappy());
     }
 
     void ShowFeeling(CareType emotion)
@@ -341,6 +344,7 @@ public class Panparu : MonoBehaviour
         if(emotion == CareType.Good){
             feeling.GetComponent<Image>().sprite = goodSprite;
             panparuAudio.PlayOneShot(happy, 1f);
+            StartCoroutine(ShowHappy());
         }
         else if(emotion == CareType.Okay){
             feeling.GetComponent<Image>().sprite = okaySprite;
@@ -468,9 +472,20 @@ public class Panparu : MonoBehaviour
         }
     }
 
+    IEnumerator ShowHappy()
+    {
+        Sprite curSprite = Instance.GetComponent<Image>().sprite;
+        var sp = Resources.Load(Instance.GetComponent<Image>().sprite.name + "(H)") as Sprite;
+        print(Instance.GetComponent<Image>().sprite.name + "(H)");
+        Instance.GetComponent<Image>().sprite = sp;
+        yield return new WaitForSeconds(1);
+        Instance.GetComponent<Image>().sprite = curSprite;
+    }
+
     void Reset(){
         Button_Functions.Instance.ToggleButtons(true);
         DataManager.Instance.NewGame();
+        m_Animator.enabled = true;
         Instance.GetComponent<Button>().onClick.RemoveListener(Reset);
         Instance.GetComponent<Button>().onClick.AddListener(CheckEmotion);
     }
