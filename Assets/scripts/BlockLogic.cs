@@ -16,16 +16,30 @@ public class BlockLogic : MonoBehaviour
         GameObject canvasObj = GameObject.Find("Canvas");
         canvas = canvasObj.GetComponent<Canvas>();
 
-        
-        while (CheckValid()) {
-            gameObject.transform.position += new Vector3(0, 2, 0) * canvas.scaleFactor;
+        bool atTop = false;
+        while (!atTop) {
+            foreach (Transform subBlock in rig) {
+                Vector3 pos = subBlock.position;
+                Vector2 gridPos = MinigameManager.Instance.ConvertPosToGridCoordinates(pos);
+                //Check if out of bounds
+                if (gridPos.y >= MinigameManager.grid.GetLength(1)) {
+                    atTop = true;
+                    break;
+                }
+            }
+            if (!atTop) 
+                gameObject.transform.position += new Vector3(0, 2, 0) * canvas.scaleFactor;
         }
+        gameObject.transform.position += new Vector3(0, -2, 0) * canvas.scaleFactor;
         if (!CheckValid()) {
-            gameObject.transform.position += new Vector3(0, -2, 0) * canvas.scaleFactor;
-        }
-        if (!CheckValid()) {
+            moveable = false;
+            foreach (Transform subBlock in rig) {
+                Vector2 gridPos = MinigameManager.Instance.ConvertPosToGridCoordinates(subBlock.position);
+                if (MinigameManager.grid[(int)gridPos.x, (int)gridPos.y] != null)
+                    Destroy(MinigameManager.grid[(int)gridPos.x, (int)gridPos.y].gameObject);
+                MinigameManager.grid[(int)gridPos.x, (int)gridPos.y] = subBlock;
+            }
             MinigameManager.Instance.GameOver();
-            Destroy(gameObject);
         }
     }
     bool CheckValid() {
@@ -71,7 +85,7 @@ public class BlockLogic : MonoBehaviour
         }
         
         //Harddrop
-        if (Input.GetMouseButton(1)) {
+        if (Input.GetMouseButton(0)) {
             if (fallTimer > MinigameManager.fallTime) {
                 gameObject.transform.position += new Vector3(0, -2, 0) * canvas.scaleFactor;
                 if (!CheckValid()) {
@@ -90,19 +104,9 @@ public class BlockLogic : MonoBehaviour
                 dropTimer = 0;
             }
         }
-        void BlockLanded() {
-            moveable = false;
-            foreach (Transform subBlock in rig) {
-                Vector2 gridPos = MinigameManager.Instance.ConvertPosToGridCoordinates(subBlock.position);
-                print(gridPos);
-                MinigameManager.grid[(int)gridPos.x, (int)gridPos.y] = subBlock;
-            }
-            MinigameManager.Instance.CheckLines();
-            MinigameManager.Instance.SpawnBlock();
-        }
-
+        
         //Rotate
-        if (Input.GetMouseButtonDown(0)) {
+        if (Input.GetMouseButtonDown(1)) {
             rig.eulerAngles -= new Vector3(0, 0, 90);
             if (!CheckValid()) {
                 rig.eulerAngles += new Vector3(0, 0, 90);
@@ -114,4 +118,15 @@ public class BlockLogic : MonoBehaviour
         dropTimer += Time.deltaTime;
         fallTimer += Time.deltaTime;
     }
+
+    void BlockLanded() {
+        moveable = false;
+        foreach (Transform subBlock in rig) {
+            Vector2 gridPos = MinigameManager.Instance.ConvertPosToGridCoordinates(subBlock.position);
+            MinigameManager.grid[(int)gridPos.x, (int)gridPos.y] = subBlock;
+        }
+        MinigameManager.Instance.CheckLines();
+        MinigameManager.Instance.SpawnBlock();
+    }
+
 }

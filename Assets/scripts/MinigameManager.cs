@@ -9,7 +9,7 @@ public class MinigameManager : MonoBehaviour
     [SerializeField] private GameObject PanparuPlayer;
     [SerializeField] private GameObject PantrisBorder;
     public static float moveTime = 0.04f;
-    public static float dropTime = 1f;
+    public static float dropTime = 0.6f;
     public static float fallTime = 0.02f;
     public static int minX = -28, maxX = -8, minY = -20, maxY = 20;
     [SerializeField] GameObject[] blocks;
@@ -29,7 +29,6 @@ public class MinigameManager : MonoBehaviour
     void OnEnable()
     {
         grid = new Transform[(maxX - minX) / 2, (maxY - minY) / 2];
-        print(grid.GetLength(0) + "x" + grid.GetLength(1));
         SpawnBlock();
         Button_Functions.Instance.isBusy=true;
     }
@@ -40,7 +39,7 @@ public class MinigameManager : MonoBehaviour
 
     public void SpawnBlock()
     {
-        dropTime *= 0.9f;
+        dropTime *= 0.95f;
         float guess = Random.Range(0f, 1f);
         guess *= blocks.Length;
         int index = Mathf.FloorToInt(guess);
