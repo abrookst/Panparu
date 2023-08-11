@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 using TMPro;
 
 public class MinigameManager : MonoBehaviour
@@ -36,6 +37,7 @@ public class MinigameManager : MonoBehaviour
         Button_Functions.Instance.isBusy=true;
         score = 0;
         scoreText.text = score.ToString();
+        PanparuPlayer.GetComponent<Image>().sprite = Panparu.Instance.GetComponent<Image>().sprite;
     }
     public Vector2 ConvertPosToGridCoordinates(Vector3 pos) {
         pos = PantrisBorder.transform.parent.InverseTransformPoint(pos);
@@ -69,6 +71,7 @@ public class MinigameManager : MonoBehaviour
             }
         }
         if (linesCleared > 0) {
+            PanparuPlayer.GetComponent<Animator>().SetTrigger("LinesCleared");
             if (linesCleared == 1) score += 100;
             else if (linesCleared == 2) score += 300;
             else if (linesCleared == 3) score += 500;
