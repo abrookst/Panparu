@@ -232,7 +232,7 @@ public class Panparu : MonoBehaviour
             
             TimeSpan timeSinceBirth = lastTimeCheckCare - birthTime;
             print("TimeSPAN since birth: " + timeSinceBirth.Seconds + " seconds");
-            averageCare = (averageCare*timeSinceBirth.Seconds + CalcCare()) / (timeSinceBirth.Seconds+1);
+            averageCare = (averageCare * (float)timeSinceBirth.TotalSeconds + CalcCare()) / ((float)timeSinceBirth.TotalSeconds + 1);
             timeSinceCheckCare = timeNow - lastTimeCheckCare;
             
             UpdateCurrentCare();
