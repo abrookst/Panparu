@@ -37,9 +37,9 @@ public class Button_Functions : MonoBehaviour
     {
         clock.SetActive(!clock.activeInHierarchy);
     }
-    public void ToggleMinigame()
+    public void StartPantris()
     {
-        minigame.SetActive(!minigame.activeInHierarchy);
+        minigame.SetActive(true);
     }
 
     public void Feed() {

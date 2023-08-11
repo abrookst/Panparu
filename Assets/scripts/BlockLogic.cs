@@ -15,14 +15,33 @@ public class BlockLogic : MonoBehaviour
     {
         GameObject canvasObj = GameObject.Find("Canvas");
         canvas = canvasObj.GetComponent<Canvas>();
+
+        
+        while (CheckValid()) {
+            gameObject.transform.position += new Vector3(0, 2, 0) * canvas.scaleFactor;
+        }
+        if (!CheckValid()) {
+            gameObject.transform.position += new Vector3(0, -2, 0) * canvas.scaleFactor;
+        }
+        if (!CheckValid()) {
+            MinigameManager.Instance.GameOver();
+            Destroy(gameObject);
+        }
     }
     bool CheckValid() {
         foreach (Transform subBlock in rig) {
             Vector3 pos = subBlock.position;
-            //Get absolute position
-            pos = canvas.transform.InverseTransformPoint(pos);
+            Vector2 gridPos = MinigameManager.Instance.ConvertPosToGridCoordinates(pos);
             //Check if out of bounds
-            if (pos.x < MinigameManager.minX || pos.x > MinigameManager.maxX || pos.y < MinigameManager.minY || pos.y > MinigameManager.maxY) {
+            if (gridPos.x < 0 || gridPos.x >= MinigameManager.grid.GetLength(0) || gridPos.y < 0 || gridPos.y >= MinigameManager.grid.GetLength(1)) {
+                return false;
+            }
+        }
+        foreach (Transform subBlock in rig) {
+            //Check if there is a block in the way
+            Vector3 pos = subBlock.position;
+            Vector2 gridPos = MinigameManager.Instance.ConvertPosToGridCoordinates(pos);
+            if (MinigameManager.grid[(int)gridPos.x, (int)gridPos.y] != null) {
                 return false;
             }
         }
@@ -39,13 +58,13 @@ public class BlockLogic : MonoBehaviour
 
             if (left) {
                 gameObject.transform.position += new Vector3(-2, 0, 0) * canvas.scaleFactor;
-                while (!CheckValid()) {
-                    gameObject.transform.position += new Vector3(1, 0, 0) * canvas.scaleFactor;
+                if (!CheckValid()) {
+                    gameObject.transform.position += new Vector3(2, 0, 0) * canvas.scaleFactor;
                 }
             } else if (right) {
                 gameObject.transform.position += new Vector3(2, 0, 0) * canvas.scaleFactor;
-                while (!CheckValid()) {
-                    gameObject.transform.position += new Vector3(-1, 0, 0) * canvas.scaleFactor;
+                if (!CheckValid()) {
+                    gameObject.transform.position += new Vector3(-2, 0, 0) * canvas.scaleFactor;
                 }
             }
             moveTimer = 0;
@@ -56,16 +75,8 @@ public class BlockLogic : MonoBehaviour
             if (fallTimer > MinigameManager.fallTime) {
                 gameObject.transform.position += new Vector3(0, -2, 0) * canvas.scaleFactor;
                 if (!CheckValid()) {
-                    while (!CheckValid()) {
-                        gameObject.transform.position += new Vector3(0, 1, 0) * canvas.scaleFactor;
-                    }
-                    moveable = false;
-                    // foreach (Transform subBlock in transform) {
-                    //     Vector3 pos = subBlock.position;
-                    //     MinigameManager.grid[(int)pos.x, (int)pos.y] = subBlock;
-                    // }
-                    // MinigameManager.CheckLines();
-                    // MinigameManager.SpawnBlock();
+                    gameObject.transform.position += new Vector3(0, 2, 0) * canvas.scaleFactor;
+                    BlockLanded();
                 }
                 fallTimer = 0;
             }
@@ -73,19 +84,21 @@ public class BlockLogic : MonoBehaviour
             if (dropTimer > MinigameManager.dropTime) {
                 gameObject.transform.position += new Vector3(0, -2, 0) * canvas.scaleFactor;
                 if (!CheckValid()) {
-                    while (!CheckValid()) {
-                        gameObject.transform.position += new Vector3(0, 1, 0) * canvas.scaleFactor;
-                    }
-                    moveable = false;
-                    // foreach (Transform subBlock in transform) {
-                    //     Vector3 pos = subBlock.position;
-                    //     MinigameManager.grid[(int)pos.x, (int)pos.y] = subBlock;
-                    // }
-                    // MinigameManager.CheckLines();
-                    // MinigameManager.SpawnBlock();
+                    gameObject.transform.position += new Vector3(0, 2, 0) * canvas.scaleFactor;
+                    BlockLanded();
                 }
                 dropTimer = 0;
             }
+        }
+        void BlockLanded() {
+            moveable = false;
+            foreach (Transform subBlock in rig) {
+                Vector2 gridPos = MinigameManager.Instance.ConvertPosToGridCoordinates(subBlock.position);
+                print(gridPos);
+                MinigameManager.grid[(int)gridPos.x, (int)gridPos.y] = subBlock;
+            }
+            MinigameManager.Instance.CheckLines();
+            MinigameManager.Instance.SpawnBlock();
         }
 
         //Rotate

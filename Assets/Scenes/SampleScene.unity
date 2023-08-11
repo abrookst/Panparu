@@ -653,7 +653,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 1052089918}
         m_TargetAssemblyTypeName: Button_Functions, Assembly-CSharp
-        m_MethodName: ToggleMinigame
+        m_MethodName: StartPantris
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -1833,6 +1833,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0e80dfed30d9f3b4e8a20d15f19bae1d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  MiniGame: {fileID: 1739400639}
   PanparuPlayer: {fileID: 147268207}
   PantrisBorder: {fileID: 660216782}
   blocks:
@@ -2925,7 +2926,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &1739400640
 RectTransform:
   m_ObjectHideFlags: 0
