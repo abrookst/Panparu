@@ -36,6 +36,7 @@ public class MinigameManager : MonoBehaviour
     void OnEnable()
     {
         grid = new Transform[(maxX - minX) / 2, (maxY - minY) / 2];
+        dropTime = 0.6f;
         SpawnBlock();
         Button_Functions.Instance.isBusy=true;
         score = 0;
@@ -122,6 +123,7 @@ public class MinigameManager : MonoBehaviour
     IEnumerator DestroyAllLinesAndEndGame() {
         for (int y = 0; y < grid.GetLength(1); y++) {
             yield return new WaitForSeconds(0.1f);
+            Instance.GetComponent<AudioSource>().PlayOneShot(Instance.pieceLand);
             DestroyLine(y);
         }
         MiniGame.SetActive(false);
