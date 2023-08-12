@@ -11,6 +11,9 @@ public class MinigameManager : MonoBehaviour
     [SerializeField] private GameObject PanparuPlayer;
     [SerializeField] private GameObject PantrisBorder;
     [SerializeField] private TextMeshProUGUI scoreText;
+    [SerializeField] private GameObject PauseIcon;
+    [SerializeField] private GameObject MouseModeInstructions;
+    [SerializeField] private GameObject KeyboardModeInstructions;
     public static float moveTime = 0.04f;
     public static float dropTime = 0.6f;
     public static float fallTime = 0.02f;
@@ -22,6 +25,9 @@ public class MinigameManager : MonoBehaviour
     public AudioClip pieceLand;
     public AudioClip lineClear;
     public AudioClip pieceRotate;
+    public static bool KeyboardMode = false;
+    public static bool Paused = false;
+    public static bool IsGameOver = false;
     /// <summary>
     /// Awake is called when the script instance is being loaded.
     /// </summary>
@@ -37,12 +43,30 @@ public class MinigameManager : MonoBehaviour
     {
         grid = new Transform[(maxX - minX) / 2, (maxY - minY) / 2];
         dropTime = 0.6f;
-        SpawnBlock();
         Button_Functions.Instance.isBusy=true;
         score = 0;
         scoreText.text = score.ToString();
         Panparu.Instance.RecalcSprite();
         PanparuPlayer.GetComponent<Image>().sprite = Panparu.Instance.GetComponent<Image>().sprite;
+        Paused = false;
+        PauseIcon.SetActive(false);
+        IsGameOver = false;
+
+        SpawnBlock();
+    }
+    void Update() {
+        if (IsGameOver) return;
+        if (Input.GetKeyDown(KeyCode.Escape)) {
+            Paused = !Paused;
+            PauseIcon.SetActive(Paused);
+        }
+        if (KeyboardMode) {
+            KeyboardModeInstructions.SetActive(true);
+            MouseModeInstructions.SetActive(false);
+        } else {
+            KeyboardModeInstructions.SetActive(false);
+            MouseModeInstructions.SetActive(true);
+        }
     }
     public Vector2 ConvertPosToGridCoordinates(Vector3 pos) {
         pos = PantrisBorder.transform.parent.InverseTransformPoint(pos);
@@ -130,6 +154,7 @@ public class MinigameManager : MonoBehaviour
         }
     }
     public void GameOver() {
+        IsGameOver = true;
         // PanparuPlayer.GetComponent<Animator>().SetTrigger("GameOver");
         StartCoroutine(DestroyAllLinesAndEndGame());
     }

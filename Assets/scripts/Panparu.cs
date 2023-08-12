@@ -552,7 +552,7 @@ public class Panparu : MonoBehaviour
     {
         //Print current age in seconds
         Debug.Log("I died at " + lastTimeCheckCare.ToString("yyyy-MM-dd\\THH:mm:ss\\Z"));
-        Debug.Log("I lived for " + (lastTimeCheckCare - birthTime).ToString("yyyy-MM-dd\\THH:mm:ss\\Z"));
+        Debug.Log("I lived for " + (lastTimeCheckCare - birthTime).TotalSeconds + " seconds");
 
         Instance.GetComponent<Image>().sprite = tombstone;
         m_Animator.enabled = false;

@@ -74,12 +74,27 @@ public class BlockLogic : MonoBehaviour
 
     // Update is called once per frame
     void Update() {
-        if (!moveable) return;
+        if (!moveable || MinigameManager.Paused) return;
+        if (MinigameManager.KeyboardMode) {
+            if (Input.GetMouseButtonDown(0) || Input.GetMouseButtonDown(1)) {
+                MinigameManager.KeyboardMode = false;
+            }
+        } else {
+            if (Input.GetKey(KeyCode.A) || Input.GetKey(KeyCode.LeftArrow) || Input.GetKey(KeyCode.D) || Input.GetKey(KeyCode.RightArrow)) {
+                MinigameManager.KeyboardMode = true;
+            }
+        }
         if (moveTimer > MinigameManager.moveTime) {
-            RectTransformUtility.ScreenPointToLocalPointInRectangle(canvas.transform as RectTransform, Input.mousePosition, canvas.worldCamera, out Vector2 pos);
-            bool left = transform.position.x > canvas.transform.TransformPoint(pos).x + (1 * canvas.scaleFactor);
-            bool right = transform.position.x < canvas.transform.TransformPoint(pos).x - (1 * canvas.scaleFactor);
-
+            bool left;
+            bool right;
+            if (!MinigameManager.KeyboardMode) {
+                RectTransformUtility.ScreenPointToLocalPointInRectangle(canvas.transform as RectTransform, Input.mousePosition, canvas.worldCamera, out Vector2 pos);
+                left = transform.position.x > canvas.transform.TransformPoint(pos).x + (1 * canvas.scaleFactor);
+                right = transform.position.x < canvas.transform.TransformPoint(pos).x - (1 * canvas.scaleFactor);
+            } else {
+                left = Input.GetKey(KeyCode.A) || Input.GetKey(KeyCode.LeftArrow);
+                right = Input.GetKey(KeyCode.D) || Input.GetKey(KeyCode.RightArrow);
+            }
             if (left) {
                 gameObject.transform.position += new Vector3(-2, 0, 0) * canvas.scaleFactor;
                 if (!CheckValid()) {
@@ -95,7 +110,7 @@ public class BlockLogic : MonoBehaviour
         }
         
         //Harddrop
-        if (Input.GetMouseButton(0)) {
+        if (Input.GetMouseButton(0) || Input.GetKey(KeyCode.DownArrow) || Input.GetKey(KeyCode.S)) {
             if (fallTimer > MinigameManager.fallTime) {
                 gameObject.transform.position += new Vector3(0, -2, 0) * canvas.scaleFactor;
                 if (!CheckValid()) {
@@ -116,7 +131,7 @@ public class BlockLogic : MonoBehaviour
         }
         
         //Rotate
-        if (Input.GetMouseButtonDown(1)) {
+        if (Input.GetMouseButtonDown(1) || Input.GetKeyDown(KeyCode.Space) || Input.GetKeyDown(KeyCode.R)) {
             MinigameManager.Instance.GetComponent<AudioSource>().PlayOneShot(MinigameManager.Instance.pieceRotate);
             rig.eulerAngles -= new Vector3(0, 0, 90);
             if (!CheckValid()) {
