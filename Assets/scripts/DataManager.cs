@@ -62,6 +62,7 @@ public class DataManager : MonoBehaviour
     public void NewGame(){
         panparuData = new PanparuData();
         Panparu.Instance.Initialize(panparuData);
+        fileDataHandler.SaveGame(panparuData);
     }
     public void SaveGame(){
         panparuData = Panparu.Instance.GetPanparuData();

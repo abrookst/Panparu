@@ -315,7 +315,7 @@ public class Panparu : MonoBehaviour
             Debug.Log("I'm full!");
             panparuAudio.PlayOneShot(reject, 1f);
         }
-            
+        DataManager.Instance.SaveGame();
     }
     public void Pet()
     {
@@ -333,7 +333,7 @@ public class Panparu : MonoBehaviour
         }
         panparuAudio.PlayOneShot(happy, 1f);
         StartCoroutine(ShowHappy());
-
+        DataManager.Instance.SaveGame();
     }
     public void Play()
     {
@@ -351,6 +351,7 @@ public class Panparu : MonoBehaviour
         }
         panparuAudio.PlayOneShot(happy, 1f);
         StartCoroutine(ShowHappy());
+        DataManager.Instance.SaveGame();
     }
 
     void ShowFeeling(CareType emotion)
