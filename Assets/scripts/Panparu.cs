@@ -15,6 +15,7 @@ public class Panparu : MonoBehaviour
     public enum Age { Egg, Baby, Child, Adult };
 
     private DateTime birthTime;
+    private DateTime lastTimeEvolve;
     private DateTime lastTimeHungry;
     private DateTime lastTimeCheckCare;
     private DateTime lastTimeAttention;
@@ -80,6 +81,7 @@ public class Panparu : MonoBehaviour
         childCare = data.childCare;
         currentAge = data.currentAge;
         birthTime = new DateTime(data.birthTime);
+        lastTimeEvolve = new DateTime(data.lastTimeEvolve);
         lastTimeHungry = new DateTime(data.lastTimeHungry);
         lastTimeCheckCare = new DateTime(data.lastTimeCheckCare);
         lastTimeAttention = new DateTime(data.lastTimeAttention);
@@ -215,7 +217,7 @@ public class Panparu : MonoBehaviour
         //Get difference cooldown times
         TimeSpan timeSinceCheckCare = timeNow - lastTimeCheckCare;
 
-        while (timeSinceCheckCare.CompareTo(checkCareCooldown) > 0)
+        while (timeSinceCheckCare.CompareTo(checkCareCooldown) >= 0)
         {
             if (currentCare == CareType.Dead) {
                 return;
@@ -225,29 +227,29 @@ public class Panparu : MonoBehaviour
             TimeSpan timeSinceHungry = lastTimeCheckCare - lastTimeHungry;
             TimeSpan timeSinceAttention = lastTimeCheckCare - lastTimeAttention;
             TimeSpan timeSincePlay = lastTimeCheckCare - lastTimePlay;
-            if (timeSinceHungry.CompareTo(hungerCooldown) > 0) {
+            if (timeSinceHungry.CompareTo(hungerCooldown) >= 0) {
                 food -= 1;
                 lastTimeHungry = lastTimeHungry.Add(hungerCooldown);
                 //print("-1 Hunger!");
             }
             
-            if (timeSinceAttention.CompareTo(attentionCooldown) > 0)
+            if (timeSinceAttention.CompareTo(attentionCooldown) >= 0)
             {
                 if (attention > 0)
                     attention -= 1;
                 lastTimeAttention = lastTimeAttention.Add(attentionCooldown);
             }
 
-            if (timeSincePlay.CompareTo(playCooldown) > 0)
+            if (timeSincePlay.CompareTo(playCooldown) >= 0)
             {
                 if (play > 0)
                     play -= 1;
                 lastTimePlay = lastTimePlay.Add(playCooldown);
             }
             
-            TimeSpan timeSinceBirth = lastTimeCheckCare - birthTime;
+            TimeSpan timeSinceEvolve = lastTimeCheckCare - lastTimeEvolve;
             //print("TimeSPAN since birth: " + timeSinceBirth.Minutes + " Minutes");
-            averageCare = (averageCare * (float)timeSinceBirth.TotalMinutes + CalcCare()) / ((float)timeSinceBirth.TotalMinutes + 1);
+            averageCare = (averageCare * (float)timeSinceEvolve.TotalMinutes + CalcCare()) / ((float)timeSinceEvolve.TotalMinutes + 1);
             timeSinceCheckCare = timeNow - lastTimeCheckCare;
             
             UpdateCurrentCare();
@@ -255,12 +257,12 @@ public class Panparu : MonoBehaviour
                 return;
             }
 
-            if (timeSinceBirth.CompareTo(babyToChild) > 0 && currentAge == Age.Baby) {
+            if (timeSinceEvolve.CompareTo(babyToChild) >= 0 && currentAge == Age.Baby) {
                 EvolveFromBabyToChild();
                 averageCare = 1f;
                 UpdateCurrentCare();
             }
-            if (timeSinceBirth.CompareTo(childToAdult) > 0 && currentAge == Age.Child) {
+            if (timeSinceEvolve.CompareTo(childToAdult) >= 0 && currentAge == Age.Child) {
                 EvolveFromChildToAdult();
                 averageCare = 1f;
                 UpdateCurrentCare();
@@ -419,6 +421,7 @@ public class Panparu : MonoBehaviour
             return;
         }
         currentAge = Age.Baby;
+        lastTimeEvolve = DateTime.Now;
         sprRdr.sprite = babySprite;
         birthTime = DateTime.Now;
         lastTimeHungry = DateTime.Now;
@@ -434,6 +437,7 @@ public class Panparu : MonoBehaviour
         }
         currentAge = Age.Child;
         babyCare = currentCare;
+        lastTimeEvolve = DateTime.Now;
         switch (babyCare)
         {
             case CareType.Good://CG
@@ -457,6 +461,7 @@ public class Panparu : MonoBehaviour
         }
         currentAge = Age.Adult;
         childCare = currentCare;
+        lastTimeEvolve = DateTime.Now;
         switch (babyCare)
         {
             case CareType.Good://CG

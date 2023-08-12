@@ -10,6 +10,7 @@ public class PanparuData {
     [SerializeField] public int play = 1;
 
     [SerializeField] public long birthTime;
+    [SerializeField] public long lastTimeEvolve;
     [SerializeField] public long lastTimeHungry;
     [SerializeField] public long lastTimeCheckCare;
     [SerializeField] public long lastTimeAttention;
@@ -25,6 +26,7 @@ public class PanparuData {
         this.attention = 1;
         this.play = 1;
         this.birthTime = DateTime.Now.Ticks;
+        this.lastTimeEvolve = DateTime.Now.Ticks;
         this.lastTimeHungry = DateTime.Now.Ticks;
         this.lastTimeCheckCare = DateTime.Now.Ticks;
         this.lastTimeAttention = DateTime.Now.Ticks;

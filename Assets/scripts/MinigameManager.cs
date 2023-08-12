@@ -75,7 +75,8 @@ public class MinigameManager : MonoBehaviour
 
     public void SpawnBlock()
     {
-        dropTime *= 0.95f;
+        if (dropTime > 0.35f)
+            dropTime *= 0.95f;
         float guess = Random.Range(0f, 1f);
         guess *= blocks.Length;
         int index = Mathf.FloorToInt(guess);
