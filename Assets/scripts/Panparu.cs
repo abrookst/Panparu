@@ -250,6 +250,9 @@ public class Panparu : MonoBehaviour
             timeSinceCheckCare = timeNow - lastTimeCheckCare;
             
             UpdateCurrentCare();
+            if (currentCare == CareType.Dead) {
+                return;
+            }
 
             if (timeSinceBirth.CompareTo(eggToChild) > 0 && currentAge == Age.Egg) {
                 EvolveFromBabyToChild();
@@ -335,6 +338,7 @@ public class Panparu : MonoBehaviour
             averageCare = 1f;
             DataManager.Instance.SaveGame();
             panparuAudio.PlayOneShot(happy, 1f);
+            StartCoroutine(ShowHappy());
             return;
         }
         lastTimeAttention = DateTime.Now;
@@ -414,6 +418,11 @@ public class Panparu : MonoBehaviour
         currentAge = Age.Baby;
         sprRdr.sprite = babySprite;
         birthTime = DateTime.Now;
+        lastTimeHungry = DateTime.Now;
+        lastTimeAttention = DateTime.Now;
+        lastTimePlay = DateTime.Now;
+        lastTimeCheckCare = DateTime.Now;
+        averageCare = 1f;
     }
 
     void EvolveFromBabyToChild(){
@@ -542,7 +551,8 @@ public class Panparu : MonoBehaviour
     void Dead()
     {
         //Print current age in seconds
-        Debug.Log("I died at " + (DateTime.Now - birthTime).TotalSeconds + " seconds old");
+        Debug.Log("I died at " + lastTimeCheckCare.ToString("yyyy-MM-dd\\THH:mm:ss\\Z"));
+        Debug.Log("I lived for " + (lastTimeCheckCare - birthTime).ToString("yyyy-MM-dd\\THH:mm:ss\\Z"));
 
         Instance.GetComponent<Image>().sprite = tombstone;
         m_Animator.enabled = false;

@@ -5,7 +5,7 @@ using System;
 using Random = UnityEngine.Random;
 [Serializable]
 public class PanparuData {
-    [SerializeField] public int food = 4;
+    [SerializeField] public int food = 3;
     [SerializeField] public int attention = 1;
     [SerializeField] public int play = 1;
 
@@ -21,7 +21,7 @@ public class PanparuData {
     [SerializeField] public Panparu.CareType childCare;
     [SerializeField] public Panparu.Age currentAge;
     public PanparuData() {
-        this.food = 4;
+        this.food = 3;
         this.attention = 1;
         this.play = 1;
         this.birthTime = DateTime.Now.Ticks;
