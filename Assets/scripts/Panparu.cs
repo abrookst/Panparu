@@ -258,10 +258,12 @@ public class Panparu : MonoBehaviour
             if (timeSinceBirth.CompareTo(babyToChild) > 0 && currentAge == Age.Baby) {
                 EvolveFromBabyToChild();
                 averageCare = 1f;
+                UpdateCurrentCare();
             }
             if (timeSinceBirth.CompareTo(childToAdult) > 0 && currentAge == Age.Child) {
                 EvolveFromChildToAdult();
                 averageCare = 1f;
+                UpdateCurrentCare();
             }
             if(food < 0)
             {
