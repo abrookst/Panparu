@@ -13,7 +13,6 @@ public class ClockManager : MonoBehaviour
     void Awake()
     {
         DateTime time = DateTime.Now;
-        print(time.Hour);
         if (time.Hour < 8 | time.Hour >= 20)
         {
             day = false;

@@ -21,13 +21,13 @@ public class Panparu : MonoBehaviour
     private DateTime lastTimePlay;
     [SerializeField] private float averageCare = 1f;
     public static Panparu Instance { get; private set; }
-    readonly TimeSpan checkCareCooldown = new(0, 0, 1);
-    readonly TimeSpan hungerCooldown = new(0, 0, 6);
-    readonly TimeSpan attentionCooldown = new(0, 0, 12);
-    readonly TimeSpan playCooldown = new(0, 0, 12);
+    readonly TimeSpan checkCareCooldown = new(0, 1, 0);
+    readonly TimeSpan hungerCooldown = new(0, 6, 0);
+    readonly TimeSpan attentionCooldown = new(0, 12, 0);
+    readonly TimeSpan playCooldown = new(0, 12, 0);
 
-    readonly TimeSpan eggToChild = new(0, 0, 24);
-    readonly TimeSpan childToAdult = new(0, 0, 60);
+    readonly TimeSpan babyToChild = new(0, 24, 0);
+    readonly TimeSpan childToAdult = new(0, 60, 0);
 
     [SerializeField] private CareType currentCare; 
     [SerializeField] private CareType babyCare;
@@ -97,6 +97,7 @@ public class Panparu : MonoBehaviour
         Instance.GetComponent<Button>().onClick.AddListener(CheckEmotion);
         
         initialized = true;
+        print("Age: " + (DateTime.Now - birthTime).TotalMinutes);
         if (currentAge == Age.Egg)
         {
            Button_Functions.Instance.Pet();
@@ -245,8 +246,8 @@ public class Panparu : MonoBehaviour
             }
             
             TimeSpan timeSinceBirth = lastTimeCheckCare - birthTime;
-            //print("TimeSPAN since birth: " + timeSinceBirth.Seconds + " seconds");
-            averageCare = (averageCare * (float)timeSinceBirth.TotalSeconds + CalcCare()) / ((float)timeSinceBirth.TotalSeconds + 1);
+            //print("TimeSPAN since birth: " + timeSinceBirth.Minutes + " Minutes");
+            averageCare = (averageCare * (float)timeSinceBirth.TotalMinutes + CalcCare()) / ((float)timeSinceBirth.TotalMinutes + 1);
             timeSinceCheckCare = timeNow - lastTimeCheckCare;
             
             UpdateCurrentCare();
@@ -254,7 +255,7 @@ public class Panparu : MonoBehaviour
                 return;
             }
 
-            if (timeSinceBirth.CompareTo(eggToChild) > 0 && currentAge == Age.Egg) {
+            if (timeSinceBirth.CompareTo(babyToChild) > 0 && currentAge == Age.Baby) {
                 EvolveFromBabyToChild();
                 averageCare = 1f;
             }
@@ -550,9 +551,9 @@ public class Panparu : MonoBehaviour
 
     void Dead()
     {
-        //Print current age in seconds
+        //Print current age in Minutes
         Debug.Log("I died at " + lastTimeCheckCare.ToString("yyyy-MM-dd\\THH:mm:ss\\Z"));
-        Debug.Log("I lived for " + (lastTimeCheckCare - birthTime).TotalSeconds + " seconds");
+        Debug.Log("I lived for " + (lastTimeCheckCare - birthTime).TotalMinutes + " Minutes");
 
         Instance.GetComponent<Image>().sprite = tombstone;
         m_Animator.enabled = false;
