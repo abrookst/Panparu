@@ -407,6 +407,7 @@ MonoBehaviour:
   okaySprite: {fileID: 21300000, guid: 38337e3d4b78ffb49a4ac09e85150f38, type: 3}
   badSprite: {fileID: 21300000, guid: 26ba44d97061d9c40ac64f29597cfd1f, type: 3}
   deadSprite: {fileID: 21300000, guid: 4e9552bd947b9fd4c8ff5a7724e3d4ad, type: 3}
+  babySprite: {fileID: 21300000, guid: 7e2aba3d9b1486844a87df19bc1ff024, type: 3}
   childSprites:
   - {fileID: 21300000, guid: ac0b6ced52a68654dba979b95eeb1e9b, type: 3}
   - {fileID: 21300000, guid: e22f812a8f5459141a4170c95851e980, type: 3}

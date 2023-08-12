@@ -12,7 +12,7 @@ public class Panparu : MonoBehaviour
     [SerializeField] private int play = 1;
 
     public enum CareType { Good, Okay, Bad, Dead};
-    public enum Age { Egg, Child, Adult };
+    public enum Age { Egg, Baby, Child, Adult };
 
     private DateTime birthTime;
     private DateTime lastTimeHungry;
@@ -30,7 +30,7 @@ public class Panparu : MonoBehaviour
     readonly TimeSpan childToAdult = new(0, 0, 60);
 
     [SerializeField] private CareType currentCare; 
-    [SerializeField] private CareType eggCare;
+    [SerializeField] private CareType babyCare;
     [SerializeField] private CareType childCare;
     [SerializeField] private Age currentAge;
     private int eggType;
@@ -40,6 +40,7 @@ public class Panparu : MonoBehaviour
     [SerializeField] private Sprite okaySprite;
     [SerializeField] private Sprite badSprite;
     [SerializeField] private Sprite deadSprite;
+    [SerializeField] private Sprite babySprite;
     [SerializeField] private Sprite[] childSprites;
     [SerializeField] private Sprite[] adultSpritesFromGood;
     [SerializeField] private Sprite[] adultSpritesFromOkay;
@@ -75,7 +76,7 @@ public class Panparu : MonoBehaviour
         attention = data.attention;
         play = data.play;
         averageCare = data.averageCare;
-        eggCare = data.eggCare;
+        babyCare = data.babyCare;
         childCare = data.childCare;
         currentAge = data.currentAge;
         birthTime = new DateTime(data.birthTime);
@@ -96,6 +97,10 @@ public class Panparu : MonoBehaviour
         Instance.GetComponent<Button>().onClick.AddListener(CheckEmotion);
         
         initialized = true;
+        if (currentAge == Age.Egg)
+        {
+           Button_Functions.Instance.Pet();
+        }
     }
 
     void RecalcSprite()
@@ -110,18 +115,21 @@ public class Panparu : MonoBehaviour
                 eggType = Random.Range(0, eggSprites.Length);
             sprRdr.sprite = eggSprites[eggType];
         }
+        else if (currentAge == Age.Baby) {
+            sprRdr.sprite = babySprite;
+        }
         else if (currentAge == Age.Child)
         {
             //Calculate what sprite it should have based on how it was treated in the egg
-            if (eggCare == CareType.Good)
+            if (babyCare == CareType.Good)
             {
                 sprRdr.sprite = childSprites[0];
             }
-            else if (eggCare == CareType.Okay)
+            else if (babyCare == CareType.Okay)
             {
                 sprRdr.sprite = childSprites[1];
             }
-            else if (eggCare == CareType.Bad)
+            else if (babyCare == CareType.Bad)
             {
                 sprRdr.sprite = childSprites[2];
             }
@@ -129,7 +137,7 @@ public class Panparu : MonoBehaviour
         else
         {
             //Calculate what sprite it should have based on how it was treated in the egg and as a child
-            if (eggCare == CareType.Good)
+            if (babyCare == CareType.Good)
             {
                 if (childCare == CareType.Good)
                 {
@@ -144,7 +152,7 @@ public class Panparu : MonoBehaviour
                     sprRdr.sprite = adultSpritesFromGood[2];
                 }
             }
-            else if (eggCare == CareType.Okay)
+            else if (babyCare == CareType.Okay)
             {
                 if (childCare == CareType.Good)
                 {
@@ -159,7 +167,7 @@ public class Panparu : MonoBehaviour
                     sprRdr.sprite = adultSpritesFromOkay[2];
                 }
             }
-            else if (eggCare == CareType.Bad)
+            else if (babyCare == CareType.Bad)
             {
                 if (childCare == CareType.Good)
                 {
@@ -184,7 +192,7 @@ public class Panparu : MonoBehaviour
             attention = attention,
             play = play,
             averageCare = averageCare,
-            eggCare = eggCare,
+            babyCare = babyCare,
             childCare = childCare,
             currentAge = currentAge,
             birthTime = birthTime.Ticks,
@@ -199,7 +207,7 @@ public class Panparu : MonoBehaviour
 
     void Update() 
     {
-        if (!initialized)
+        if (!initialized || currentCare == CareType.Dead || currentAge == Age.Egg) 
             return;
 
         DateTime timeNow = DateTime.Now;
@@ -244,7 +252,7 @@ public class Panparu : MonoBehaviour
             UpdateCurrentCare();
 
             if (timeSinceBirth.CompareTo(eggToChild) > 0 && currentAge == Age.Egg) {
-                EvolveFromEggToChild();
+                EvolveFromBabyToChild();
                 averageCare = 1f;
             }
             if (timeSinceBirth.CompareTo(childToAdult) > 0 && currentAge == Age.Child) {
@@ -322,6 +330,13 @@ public class Panparu : MonoBehaviour
         if (currentCare == CareType.Dead) {
             return;
         }
+        if (currentAge == Age.Egg) {
+            EvolveFromEggToBaby();
+            averageCare = 1f;
+            DataManager.Instance.SaveGame();
+            panparuAudio.PlayOneShot(happy, 1f);
+            return;
+        }
         lastTimeAttention = DateTime.Now;
         ShowFeeling(CareType.Good);
         if (attention < 1) {
@@ -392,14 +407,22 @@ public class Panparu : MonoBehaviour
             return;
         ShowFeeling(currentCare);
     }
+    void EvolveFromEggToBaby(){
+        if (currentCare == CareType.Dead) {
+            return;
+        }
+        currentAge = Age.Baby;
+        sprRdr.sprite = babySprite;
+        birthTime = DateTime.Now;
+    }
 
-    void EvolveFromEggToChild(){
+    void EvolveFromBabyToChild(){
         if (currentCare == CareType.Dead) {
             return;
         }
         currentAge = Age.Child;
-        eggCare = currentCare;
-        switch (eggCare)
+        babyCare = currentCare;
+        switch (babyCare)
         {
             case CareType.Good://CG
                 sprRdr.sprite = childSprites[0];
@@ -422,7 +445,7 @@ public class Panparu : MonoBehaviour
         }
         currentAge = Age.Adult;
         childCare = currentCare;
-        switch (eggCare)
+        switch (babyCare)
         {
             case CareType.Good://CG
                 EvolveFromGoodChildToAdult();
@@ -509,7 +532,6 @@ public class Panparu : MonoBehaviour
     }
 
     void Reset(){
-        Button_Functions.Instance.ToggleButtons(true);
         DataManager.Instance.NewGame();
         m_Animator.enabled = true;
         Instance.GetComponent<Button>().onClick.RemoveListener(Reset);
