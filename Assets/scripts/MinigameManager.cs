@@ -41,6 +41,7 @@ public class MinigameManager : MonoBehaviour
         Button_Functions.Instance.isBusy=true;
         score = 0;
         scoreText.text = score.ToString();
+        Panparu.Instance.RecalcSprite();
         PanparuPlayer.GetComponent<Image>().sprite = Panparu.Instance.GetComponent<Image>().sprite;
     }
     public Vector2 ConvertPosToGridCoordinates(Vector3 pos) {

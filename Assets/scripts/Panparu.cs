@@ -103,7 +103,7 @@ public class Panparu : MonoBehaviour
         }
     }
 
-    void RecalcSprite()
+    public void RecalcSprite()
     {
         if (currentCare == CareType.Dead) {
             initialized = true;
@@ -521,8 +521,9 @@ public class Panparu : MonoBehaviour
             yield break;
         }
         Sprite sp = Resources.Load<Sprite>(Instance.GetComponent<Image>().sprite.name + "(H)") as Sprite;
-        if (currentCare == CareType.Dead)
+        if (currentCare == CareType.Dead || sp == null)
         {
+            print(Instance.GetComponent<Image>().sprite.name + "(H)" + " not found");
             yield break;
         }
         print("sp: "+sp.name);
