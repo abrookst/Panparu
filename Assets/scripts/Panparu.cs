@@ -437,7 +437,7 @@ public class Panparu : MonoBehaviour
         }
         currentAge = Age.Child;
         babyCare = currentCare;
-        lastTimeEvolve = DateTime.Now;
+        lastTimeEvolve = lastTimeCheckCare;
         switch (babyCare)
         {
             case CareType.Good://CG
@@ -461,7 +461,7 @@ public class Panparu : MonoBehaviour
         }
         currentAge = Age.Adult;
         childCare = currentCare;
-        lastTimeEvolve = DateTime.Now;
+        lastTimeEvolve = lastTimeCheckCare;
         switch (babyCare)
         {
             case CareType.Good://CG
