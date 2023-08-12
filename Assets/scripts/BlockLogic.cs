@@ -131,7 +131,7 @@ public class BlockLogic : MonoBehaviour
         }
         
         //Rotate
-        if (Input.GetMouseButtonDown(1) || Input.GetKeyDown(KeyCode.Space) || Input.GetKeyDown(KeyCode.R)) {
+        if (Input.GetMouseButtonDown(1) || Input.GetKeyDown(KeyCode.R)) {
             MinigameManager.Instance.GetComponent<AudioSource>().PlayOneShot(MinigameManager.Instance.pieceRotate);
             rig.eulerAngles -= new Vector3(0, 0, 90);
             if (!CheckValid()) {

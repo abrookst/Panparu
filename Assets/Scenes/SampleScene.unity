@@ -3507,10 +3507,9 @@ MonoBehaviour:
 
     S: Drop
 
-    Space / r: Rotate
+    R: Rotate
 
-    ESC:
-    Pause'
+    ESC: Pause'
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 322138c01b48c5d458c9311060fbc4a8, type: 2}
   m_sharedMaterial: {fileID: 4839222086925724045, guid: 322138c01b48c5d458c9311060fbc4a8, type: 2}
