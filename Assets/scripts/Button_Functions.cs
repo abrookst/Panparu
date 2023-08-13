@@ -139,7 +139,7 @@ public class Button_Functions : MonoBehaviour
         FeedButton.interactable = on;
         PetButton.interactable = on;
         PlayButton.interactable = on;
-        TimeButton.interactable = on;
+        // TimeButton.interactable = on;
     }
 
 }
