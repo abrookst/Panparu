@@ -21,7 +21,7 @@ public class Panparu : MonoBehaviour
     private DateTime lastTimeAttention;
     private DateTime lastTimePlay;
     [SerializeField] private float averageCare = 1f;
-    public bool secret = false;
+    [SerializeField] public int highscore = 0;
     public static Panparu Instance { get; private set; }
     readonly TimeSpan checkCareCooldown = new(0, 1, 0);
     readonly TimeSpan hungerCooldown = new(0, 6, 0);
@@ -88,7 +88,7 @@ public class Panparu : MonoBehaviour
         lastTimeCheckCare = new DateTime(data.lastTimeCheckCare);
         lastTimeAttention = new DateTime(data.lastTimeAttention);
         lastTimePlay = new DateTime(data.lastTimePlay);
-        secret = data.secret;
+        highscore = data.highscore;
         eggType = data.eggType;
 
         sprRdr = gameObject.GetComponent<Image>();
@@ -142,7 +142,7 @@ public class Panparu : MonoBehaviour
         }
         else
         {
-            if (secret) {
+            if (highscore >= 10000) {
                 sprRdr.sprite = adultSpritesFromGood[3];
             }
             //Calculate what sprite it should have based on how it was treated in the egg and as a child
@@ -210,7 +210,7 @@ public class Panparu : MonoBehaviour
             lastTimeCheckCare = lastTimeCheckCare.Ticks,
             lastTimeAttention = lastTimeAttention.Ticks,
             lastTimePlay = lastTimePlay.Ticks,
-            secret = secret,
+            highscore = highscore,
             eggType = eggType
         };
         return data;
@@ -473,7 +473,7 @@ public class Panparu : MonoBehaviour
         currentAge = Age.Adult;
         childCare = currentCare;
         lastTimeEvolve = lastTimeCheckCare;
-        if (secret) {
+        if (highscore >= 10000) {
             sprRdr.sprite = adultSpritesFromGood[3];
             return;
         }

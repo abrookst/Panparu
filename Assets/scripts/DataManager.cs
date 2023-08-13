@@ -17,7 +17,7 @@ public class PanparuData {
     [SerializeField] public long lastTimePlay;
     [SerializeField] public float averageCare = 1f;
     [SerializeField] public int eggType = -1;
-    [SerializeField] public bool secret = false;
+    [SerializeField] public int highscore = 0;
 
     [SerializeField] public Panparu.CareType babyCare;
     [SerializeField] public Panparu.CareType childCare;
@@ -36,7 +36,7 @@ public class PanparuData {
         this.childCare = Panparu.CareType.Good;
         this.currentAge = Panparu.Age.Egg;
         this.eggType = -1;
-        this.secret = false;
+        this.highscore = 0;
         this.averageCare = 1f;
     }
 }
