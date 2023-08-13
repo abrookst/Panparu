@@ -475,6 +475,7 @@ MonoBehaviour:
   attention: 1
   play: 1
   averageCare: 1
+  secret: 0
   currentCare: 0
   babyCare: 0
   childCare: 0
@@ -493,6 +494,7 @@ MonoBehaviour:
   - {fileID: 21300000, guid: 5c1828319aede324194c16aca213c203, type: 3}
   - {fileID: 21300000, guid: f7603a3be04174c46a1dc93cbff1d948, type: 3}
   - {fileID: 21300000, guid: a59599b222237e64899e7a3775071d9e, type: 3}
+  - {fileID: 21300000, guid: 6951a12d900fcf7458d6a305da3afeae, type: 3}
   adultSpritesFromOkay:
   - {fileID: 21300000, guid: 858ed8d56b404114583da35b4f7a2a5f, type: 3}
   - {fileID: 21300000, guid: df2e70c9337b81949902dc15901ba1b4, type: 3}
@@ -2334,7 +2336,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -13, y: 21.8}
+  m_AnchoredPosition: {x: -16.3, y: 21.7}
   m_SizeDelta: {x: 10, y: 10}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &678589184
