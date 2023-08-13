@@ -6,10 +6,10 @@ using TMPro;
 
 public class MinigameManager : MonoBehaviour
 {
-    private static Canvas canvas;
+    // private static Canvas canvas;
     [SerializeField] private GameObject MiniGame;
     [SerializeField] private GameObject PanparuPlayer;
-    [SerializeField] private GameObject PantrisBorder;
+    [SerializeField] public GameObject PantrisBorder;
     [SerializeField] private TextMeshProUGUI scoreText;
     [SerializeField] private GameObject PauseIcon;
     [SerializeField] private GameObject MouseModeInstructions;
@@ -17,7 +17,7 @@ public class MinigameManager : MonoBehaviour
     public static float moveTime = 0.04f;
     public static float dropTime = 0.6f;
     public static float fallTime = 0.02f;
-    public static int minX = -28, maxX = -8, minY = -20, maxY = 20;
+    public static int minX = 1, maxX = 22, minY = 1, maxY = 40;
     [SerializeField] GameObject[] blocks;
     public static Transform[,] grid;
     int score = 0;
@@ -34,7 +34,7 @@ public class MinigameManager : MonoBehaviour
     void Awake()
     {
         Instance = this;
-        canvas = PantrisBorder.transform.parent.parent.GetComponent<Canvas>();
+        // canvas = PantrisBorder.transform.parent.parent.GetComponent<Canvas>();
     }
     /// <summary>
     /// This function is called when the object becomes enabled and active.
@@ -68,9 +68,9 @@ public class MinigameManager : MonoBehaviour
         //     MouseModeInstructions.SetActive(true);
         // }
     }
-    public Vector2 ConvertPosToGridCoordinates(Vector3 pos) {
-        pos = PantrisBorder.transform.parent.InverseTransformPoint(pos);
-        return new Vector2(Mathf.FloorToInt((pos.x - minX)/2), Mathf.FloorToInt((pos.y - minY)/2));
+    public Vector2Int ConvertToGridCoordinates(Transform t) {
+        Vector3 pos = PantrisBorder.transform.InverseTransformPoint(t.position);
+        return new Vector2Int(Mathf.FloorToInt((pos.x - minX)/2), Mathf.FloorToInt((pos.y - minY)/2));
     }
 
     public void SpawnBlock()
@@ -137,7 +137,7 @@ public class MinigameManager : MonoBehaviour
                 {
                     grid[x, i] = grid[x, i + 1];
                     if (grid[x, i] != null)
-                        grid[x, i].gameObject.transform.position -= new Vector3(0, 2, 0) * canvas.scaleFactor;;
+                        grid[x, i].gameObject.transform.localPosition += new Vector3(0, -2, 0);
                     grid[x, i + 1] = null;
                 }
             }

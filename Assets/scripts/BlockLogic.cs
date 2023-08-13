@@ -17,12 +17,10 @@ public class BlockLogic : MonoBehaviour
     {
         GameObject canvasObj = GameObject.Find("Canvas");
         canvas = canvasObj.GetComponent<Canvas>();
-
         bool atTop = false;
         while (!atTop) {
             foreach (Transform subBlock in rig) {
-                Vector3 pos = subBlock.position;
-                Vector2 gridPos = MinigameManager.Instance.ConvertPosToGridCoordinates(pos);
+                Vector2Int gridPos = MinigameManager.Instance.ConvertToGridCoordinates(subBlock);
                 //Check if out of bounds
                 if (gridPos.y >= MinigameManager.grid.GetLength(1)) {
                     atTop = true;
@@ -30,22 +28,23 @@ public class BlockLogic : MonoBehaviour
                 }
             }
             if (!atTop) 
-                gameObject.transform.position += new Vector3(0, 2, 0) * canvas.scaleFactor;
+                gameObject.transform.localPosition += new Vector3(0, 2, 0);
         }
-        gameObject.transform.position += new Vector3(0, -2, 0) * canvas.scaleFactor;
+        gameObject.transform.localPosition += new Vector3(0, -2, 0);
         if (!CheckValid()) {
             moveable = false;
             foreach (Transform subBlock in rig) {
-                Vector2 gridPos = MinigameManager.Instance.ConvertPosToGridCoordinates(subBlock.position);
-                if (MinigameManager.grid[(int)gridPos.x, (int)gridPos.y] != null)
-                    Destroy(MinigameManager.grid[(int)gridPos.x, (int)gridPos.y].gameObject);
-                MinigameManager.grid[(int)gridPos.x, (int)gridPos.y] = subBlock;
+                Vector2Int gridPos = MinigameManager.Instance.ConvertToGridCoordinates(subBlock);
+                // print("possible overlap" + gridPos + " " + MinigameManager.grid.GetLength(0) + " " + MinigameManager.grid.GetLength(1));
+                if (MinigameManager.grid[gridPos.x, gridPos.y] != null)
+                    Destroy(MinigameManager.grid[gridPos.x, gridPos.y].gameObject);
+                MinigameManager.grid[gridPos.x, gridPos.y] = subBlock;
             }
             MinigameManager.Instance.GameOver();
             return;
         }
 
-        ghost = Instantiate(gameObject, transform.position, transform.rotation, transform.parent).GetComponent<BlockLogic>();
+        ghost = Instantiate(gameObject, transform.localPosition, transform.rotation, transform.parent).GetComponent<BlockLogic>();
         ghost.enabled = false;
         foreach (Transform subBlock in ghost.rig) {
             subBlock.GetComponent<Image>().color = new Color(1, 1, 1, 0.5f);
@@ -54,18 +53,18 @@ public class BlockLogic : MonoBehaviour
     }
     public bool CheckValid() {
         foreach (Transform subBlock in rig) {
-            Vector3 pos = subBlock.position;
-            Vector2 gridPos = MinigameManager.Instance.ConvertPosToGridCoordinates(pos);
+            Vector2Int gridPos = MinigameManager.Instance.ConvertToGridCoordinates(subBlock);
             //Check if out of bounds
             if (gridPos.x < 0 || gridPos.x >= MinigameManager.grid.GetLength(0) || gridPos.y < 0 || gridPos.y >= MinigameManager.grid.GetLength(1)) {
                 return false;
+            } else {
             }
         }
         foreach (Transform subBlock in rig) {
             //Check if there is a block in the way
-            Vector3 pos = subBlock.position;
-            Vector2 gridPos = MinigameManager.Instance.ConvertPosToGridCoordinates(pos);
-            if (MinigameManager.grid[(int)gridPos.x, (int)gridPos.y] != null) {
+            Vector2Int gridPos = MinigameManager.Instance.ConvertToGridCoordinates(subBlock);
+            // print("possible overlap" + gridPos + " " + MinigameManager.grid.GetLength(0) + " " + MinigameManager.grid.GetLength(1));
+            if (MinigameManager.grid[gridPos.x, gridPos.y] != null) {
                 return false;
             }
         }
@@ -89,21 +88,21 @@ public class BlockLogic : MonoBehaviour
             bool right;
             if (!MinigameManager.KeyboardMode) {
                 RectTransformUtility.ScreenPointToLocalPointInRectangle(canvas.transform as RectTransform, Input.mousePosition, canvas.worldCamera, out Vector2 pos);
-                left = transform.position.x > canvas.transform.TransformPoint(pos).x + (1 * canvas.scaleFactor);
-                right = transform.position.x < canvas.transform.TransformPoint(pos).x - (1 * canvas.scaleFactor);
+                left = transform.localPosition.x > canvas.transform.TransformPoint(pos).x + (1 * canvas.scaleFactor);
+                right = transform.localPosition.x < canvas.transform.TransformPoint(pos).x - (1 * canvas.scaleFactor);
             } else {
                 left = Input.GetKey(KeyCode.A) || Input.GetKey(KeyCode.LeftArrow);
                 right = Input.GetKey(KeyCode.D) || Input.GetKey(KeyCode.RightArrow);
             }
             if (left) {
-                gameObject.transform.position += new Vector3(-2, 0, 0) * canvas.scaleFactor;
+                gameObject.transform.localPosition += new Vector3(-2, 0, 0);
                 if (!CheckValid()) {
-                    gameObject.transform.position += new Vector3(2, 0, 0) * canvas.scaleFactor;
+                    gameObject.transform.localPosition += new Vector3(2, 0, 0);
                 }
             } else if (right) {
-                gameObject.transform.position += new Vector3(2, 0, 0) * canvas.scaleFactor;
+                gameObject.transform.localPosition += new Vector3(2, 0, 0);
                 if (!CheckValid()) {
-                    gameObject.transform.position += new Vector3(-2, 0, 0) * canvas.scaleFactor;
+                    gameObject.transform.localPosition += new Vector3(-2, 0, 0);
                 }
             }
             moveTimer = 0;
@@ -112,18 +111,18 @@ public class BlockLogic : MonoBehaviour
         //Harddrop
         if (Input.GetMouseButton(0) || Input.GetKey(KeyCode.DownArrow) || Input.GetKey(KeyCode.S)) {
             if (fallTimer > MinigameManager.fallTime) {
-                gameObject.transform.position += new Vector3(0, -2, 0) * canvas.scaleFactor;
+                gameObject.transform.localPosition += new Vector3(0, -2, 0);
                 if (!CheckValid()) {
-                    gameObject.transform.position += new Vector3(0, 2, 0) * canvas.scaleFactor;
+                    gameObject.transform.localPosition += new Vector3(0, 2, 0);
                     BlockLanded();
                 }
                 fallTimer = 0;
             }
         } else {
             if (dropTimer > MinigameManager.dropTime) {
-                gameObject.transform.position += new Vector3(0, -2, 0) * canvas.scaleFactor;
+                gameObject.transform.localPosition += new Vector3(0, -2, 0);
                 if (!CheckValid()) {
-                    gameObject.transform.position += new Vector3(0, 2, 0) * canvas.scaleFactor;
+                    gameObject.transform.localPosition += new Vector3(0, 2, 0);
                     BlockLanded();
                 }
                 dropTimer = 0;
@@ -133,7 +132,7 @@ public class BlockLogic : MonoBehaviour
         //Rotate
         if (Input.GetMouseButtonDown(1) || Input.GetKeyDown(KeyCode.R)) {
             MinigameManager.Instance.GetComponent<AudioSource>().PlayOneShot(MinigameManager.Instance.pieceRotate);
-            rig.eulerAngles -= new Vector3(0, 0, 90);
+            rig.eulerAngles += new Vector3(0, 0, -90);
             if (!CheckValid()) {
                 rig.eulerAngles += new Vector3(0, 0, 90);
             }
@@ -146,25 +145,28 @@ public class BlockLogic : MonoBehaviour
 
         if (ghost == null) return;
         //Ghost
-        ghost.transform.position = transform.position;
+        ghost.transform.localPosition = transform.localPosition;
         ghost.rig.eulerAngles = rig.eulerAngles;
         while (ghost.CheckValid()) {
-            ghost.transform.position += new Vector3(0, -2, 0) * canvas.scaleFactor;
+            ghost.transform.localPosition += new Vector3(0, -2, 0);
         }
-        ghost.transform.position += new Vector3(0, 2, 0) * canvas.scaleFactor;
+        ghost.transform.localPosition += new Vector3(0, 2, 0);
     }
 
     void BlockLanded() {
         moveable = false;
         MinigameManager.Instance.GetComponent<AudioSource>().PlayOneShot(MinigameManager.Instance.pieceLand);
-        foreach (Transform subBlock in rig) {
-            Vector2 gridPos = MinigameManager.Instance.ConvertPosToGridCoordinates(subBlock.position);
-            MinigameManager.grid[(int)gridPos.x, (int)gridPos.y] = subBlock;
+        while (rig.childCount > 0) {
+            Transform subBlock = rig.GetChild(0);
+            Vector2Int gridPos = MinigameManager.Instance.ConvertToGridCoordinates(subBlock);
+            MinigameManager.grid[gridPos.x, gridPos.y] = subBlock;
+            subBlock.SetParent(MinigameManager.Instance.PantrisBorder.transform);
         }
         MinigameManager.Instance.CheckLines();
         MinigameManager.Instance.SpawnBlock();
         Destroy(ghost.gameObject);
         ghost = null;
+        Destroy(gameObject);
     }
 
 }
