@@ -6,6 +6,7 @@ using TMPro;
 public class ClockManager : MonoBehaviour
 {
     public TMP_Text textClock;
+    public TMP_Text ageDisplay;
     private bool day;
     public swappable[] spriteSwapList;
     public Image[] backgrounds;
@@ -47,6 +48,7 @@ public class ClockManager : MonoBehaviour
             }
             day = true;
         }
+        ageDisplay.text = ((int)(Panparu.Instance.lastTimeCheckCare - Panparu.Instance.birthTime).TotalDays).ToString() + " days\n" + (Panparu.Instance.lastTimeCheckCare - Panparu.Instance.birthTime).TotalHours.ToString("00") + " hours";
     }
     //night bgr 6461c2, day bgr f0dab1
     

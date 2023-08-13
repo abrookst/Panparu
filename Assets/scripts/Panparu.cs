@@ -14,10 +14,10 @@ public class Panparu : MonoBehaviour
     public enum CareType { Good, Okay, Bad, Dead};
     public enum Age { Egg, Baby, Child, Adult };
 
-    private DateTime birthTime;
+    public DateTime birthTime;
     private DateTime lastTimeEvolve;
     private DateTime lastTimeHungry;
-    private DateTime lastTimeCheckCare;
+    public DateTime lastTimeCheckCare;
     private DateTime lastTimeAttention;
     private DateTime lastTimePlay;
     [SerializeField] private float averageCare = 1f;
@@ -247,6 +247,7 @@ public class Panparu : MonoBehaviour
                 lastTimePlay = lastTimePlay.Add(playCooldown);
             }
             
+            TimeSpan timeSinceBirth = lastTimeCheckCare - birthTime;
             TimeSpan timeSinceEvolve = lastTimeCheckCare - lastTimeEvolve;
             //print("TimeSPAN since birth: " + timeSinceBirth.Minutes + " Minutes");
             averageCare = (averageCare * (float)timeSinceEvolve.TotalMinutes + CalcCare()) / ((float)timeSinceEvolve.TotalMinutes + 1);
@@ -256,13 +257,12 @@ public class Panparu : MonoBehaviour
             if (currentCare == CareType.Dead) {
                 return;
             }
-
-            if (timeSinceEvolve.CompareTo(babyToChild) >= 0 && currentAge == Age.Baby) {
+            if (timeSinceBirth.CompareTo(babyToChild) >= 0 && currentAge == Age.Baby) {
                 EvolveFromBabyToChild();
                 averageCare = 1f;
                 UpdateCurrentCare();
             }
-            if (timeSinceEvolve.CompareTo(childToAdult) >= 0 && currentAge == Age.Child) {
+            if (timeSinceBirth.CompareTo(childToAdult) >= 0 && currentAge == Age.Child) {
                 EvolveFromChildToAdult();
                 averageCare = 1f;
                 UpdateCurrentCare();

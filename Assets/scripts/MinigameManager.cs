@@ -60,13 +60,13 @@ public class MinigameManager : MonoBehaviour
             Paused = !Paused;
             PauseIcon.SetActive(Paused);
         }
-        if (KeyboardMode) {
-            KeyboardModeInstructions.SetActive(true);
-            MouseModeInstructions.SetActive(false);
-        } else {
-            KeyboardModeInstructions.SetActive(false);
-            MouseModeInstructions.SetActive(true);
-        }
+        // if (KeyboardMode) {
+        //     KeyboardModeInstructions.SetActive(true);
+        //     MouseModeInstructions.SetActive(false);
+        // } else {
+        //     KeyboardModeInstructions.SetActive(false);
+        //     MouseModeInstructions.SetActive(true);
+        // }
     }
     public Vector2 ConvertPosToGridCoordinates(Vector3 pos) {
         pos = PantrisBorder.transform.parent.InverseTransformPoint(pos);
