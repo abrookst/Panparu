@@ -109,7 +109,8 @@ public class MinigameManager : MonoBehaviour
             else if (linesCleared == 3) score += 500;
             else if (linesCleared == 4) score += 800;
             scoreText.text = score.ToString();
-            Panparu.Instance.highscore = score;
+            if (score > Panparu.Instance.highscore)
+                Panparu.Instance.highscore = score;
         }
     }
     IEnumerator ShowHappy()
