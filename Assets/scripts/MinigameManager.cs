@@ -6,6 +6,8 @@ using TMPro;
 
 public class MinigameManager : MonoBehaviour
 {
+    public RectTransform m_parent;
+    public Camera m_camera;
     // private static Canvas canvas;
     [SerializeField] private GameObject MiniGame;
     [SerializeField] private GameObject PanparuPlayer;
@@ -17,7 +19,7 @@ public class MinigameManager : MonoBehaviour
     public static float moveTime = 0.04f;
     public static float dropTime = 0.6f;
     public static float fallTime = 0.02f;
-    public static int minX = 1, maxX = 22, minY = 1, maxY = 40;
+    public static int minX = 1, maxX = 22, minY = 1, maxY = 41;
     [SerializeField] GameObject[] blocks;
     public static Transform[,] grid;
     int score = 0;

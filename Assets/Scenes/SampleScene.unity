@@ -2285,6 +2285,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0e80dfed30d9f3b4e8a20d15f19bae1d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  m_parent: {fileID: 1317775591}
+  m_camera: {fileID: 1240809904}
   MiniGame: {fileID: 1739400639}
   PanparuPlayer: {fileID: 147268207}
   PantrisBorder: {fileID: 660216782}

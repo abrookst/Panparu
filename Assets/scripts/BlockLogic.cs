@@ -6,6 +6,7 @@ using UnityEngine.UI;
 public class BlockLogic : MonoBehaviour
 {
     Canvas canvas;
+    CanvasScaler canvasScaler;
     float moveTimer;
     float dropTimer;
     float fallTimer;
@@ -17,6 +18,7 @@ public class BlockLogic : MonoBehaviour
     {
         GameObject canvasObj = GameObject.Find("Canvas");
         canvas = canvasObj.GetComponent<Canvas>();
+        canvasScaler = canvasObj.GetComponent<CanvasScaler>();
         bool atTop = false;
         while (!atTop) {
             foreach (Transform subBlock in rig) {
@@ -70,6 +72,18 @@ public class BlockLogic : MonoBehaviour
         }
         return true;
     }
+    Vector2 UnscalePosition(Vector2 vec)
+    {
+        Vector2 referenceResolution = canvasScaler.referenceResolution;
+        Vector2 currentResolution = new Vector2(Screen.width, Screen.height);
+       
+        float widthRatio = currentResolution.x / referenceResolution.x;
+        float heightRatio = currentResolution.y / referenceResolution.y;
+ 
+        float ratio = Mathf.Lerp(heightRatio, widthRatio, canvasScaler.matchWidthOrHeight);
+ 
+        return vec / ratio;
+    }
 
     // Update is called once per frame
     void Update() {
@@ -87,9 +101,11 @@ public class BlockLogic : MonoBehaviour
             bool left;
             bool right;
             if (!MinigameManager.KeyboardMode) {
-                RectTransformUtility.ScreenPointToLocalPointInRectangle(canvas.transform as RectTransform, Input.mousePosition, canvas.worldCamera, out Vector2 pos);
-                left = transform.localPosition.x > canvas.transform.TransformPoint(pos).x + (1 * canvas.scaleFactor);
-                right = transform.localPosition.x < canvas.transform.TransformPoint(pos).x - (1 * canvas.scaleFactor);
+                float xPos = canvas.transform.InverseTransformPoint(transform.position).x;
+                Vector2 mousePos;
+                RectTransformUtility.ScreenPointToLocalPointInRectangle(MinigameManager.Instance.m_parent,Input.mousePosition,MinigameManager.Instance.m_camera,out mousePos);
+                left = mousePos.x < xPos - 1;
+                right = mousePos.x > xPos + 1;
             } else {
                 left = Input.GetKey(KeyCode.A) || Input.GetKey(KeyCode.LeftArrow);
                 right = Input.GetKey(KeyCode.D) || Input.GetKey(KeyCode.RightArrow);
