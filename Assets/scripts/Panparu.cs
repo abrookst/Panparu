@@ -48,6 +48,7 @@ public class Panparu : MonoBehaviour
     [SerializeField] private Sprite[] adultSpritesFromBad;
 
     public AudioClip happy;
+    public AudioClip neutral;
     public AudioClip reject;
     public AudioSource panparuAudio;
 
@@ -249,8 +250,9 @@ public class Panparu : MonoBehaviour
             
             TimeSpan timeSinceBirth = lastTimeCheckCare - birthTime;
             TimeSpan timeSinceEvolve = lastTimeCheckCare - lastTimeEvolve;
+            TimeSpan avgTime = (timeSinceBirth + timeSinceEvolve) / 2;
             //print("TimeSPAN since birth: " + timeSinceBirth.Minutes + " Minutes");
-            averageCare = (averageCare * (float)timeSinceEvolve.TotalMinutes + CalcCare()) / ((float)timeSinceEvolve.TotalMinutes + 1);
+            averageCare = (averageCare * (float)avgTime.TotalMinutes + CalcCare()) / ((float)avgTime.TotalMinutes + 1);
             timeSinceCheckCare = timeNow - lastTimeCheckCare;
             
             UpdateCurrentCare();
@@ -388,9 +390,11 @@ public class Panparu : MonoBehaviour
         }
         else if(emotion == CareType.Okay){
             feeling.GetComponent<Image>().sprite = okaySprite;
+            panparuAudio.PlayOneShot(neutral, 0.5f);
         }
         else if(emotion == CareType.Bad){
             feeling.GetComponent<Image>().sprite = badSprite;
+            panparuAudio.PlayOneShot(reject, 1f);
         }
         else if(emotion == CareType.Dead){
             feeling.GetComponent<Image>().sprite = deadSprite;

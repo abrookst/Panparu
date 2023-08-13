@@ -502,13 +502,14 @@ MonoBehaviour:
   - {fileID: 21300000, guid: e5d24aa0d0127ff479a7e79cf5146021, type: 3}
   - {fileID: 21300000, guid: f97d89a2662c56b45adf1aaa65cc62cc, type: 3}
   happy: {fileID: 8300000, guid: 891c875d8ddf97549ae7c213929deb62, type: 3}
+  neutral: {fileID: 8300000, guid: b6817096ee24e10489838a3a5c5df580, type: 3}
   reject: {fileID: 8300000, guid: e154a3831dd27fe4f8bcaabce22d6ae8, type: 3}
   panparuAudio: {fileID: 155012507}
   eggSprites:
-  - {fileID: 21300000, guid: b25d7764374894848acaaacdcd64dd11, type: 3}
-  - {fileID: 21300000, guid: 4d816f78573cd3843a44cf58682421da, type: 3}
-  - {fileID: 21300000, guid: b96b8225530e1cc4388b1791e8eca987, type: 3}
+  - {fileID: 21300000, guid: f813c7d46335fd34295fbd058a11abde, type: 3}
   - {fileID: 21300000, guid: d665ce71b52b8244dad4a3bbce0965f2, type: 3}
+  - {fileID: 21300000, guid: a4282d1c14d14a04b8775831cb2ee5dd, type: 3}
+  - {fileID: 21300000, guid: 9f5d79416e85ced40b850c83e52b3c1a, type: 3}
   tombstone: {fileID: 21300000, guid: b112a7e0aba99e94a879a6a4b781e712, type: 3}
   initialized: 0
 --- !u!114 &155012506
@@ -1734,8 +1735,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -7.3096, y: -17.2}
-  m_SizeDelta: {x: 47.7009, y: 25.78261}
+  m_AnchoredPosition: {x: -8, y: -16.5}
+  m_SizeDelta: {x: 31.62036, y: 25.78261}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &506819782
 MonoBehaviour:
@@ -1757,9 +1758,9 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: '8 Days
+  m_text: '8 D
 
-    12 hours'
+    12 H'
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 5048acd7eaf5a814aa74d766697c3cc8, type: 2}
   m_sharedMaterial: {fileID: 2478153401820529455, guid: 5048acd7eaf5a814aa74d766697c3cc8, type: 2}
@@ -1786,14 +1787,14 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 8.35
+  m_fontSize: 9.9
   m_fontSizeBase: 8
   m_fontWeight: 400
   m_enableAutoSizing: 1
   m_fontSizeMin: 4
   m_fontSizeMax: 72
   m_fontStyle: 16
-  m_HorizontalAlignment: 1
+  m_HorizontalAlignment: 4
   m_VerticalAlignment: 256
   m_textAlignment: 65535
   m_characterSpacing: 5
@@ -2333,7 +2334,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -22, y: 23}
+  m_AnchoredPosition: {x: -13, y: 21.8}
   m_SizeDelta: {x: 10, y: 10}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &678589184
@@ -3159,7 +3160,7 @@ Canvas:
   m_RenderMode: 0
   m_Camera: {fileID: 0}
   m_PlaneDistance: 100
-  m_PixelPerfect: 1
+  m_PixelPerfect: 0
   m_ReceivesEvents: 1
   m_OverrideSorting: 0
   m_OverridePixelPerfect: 0
