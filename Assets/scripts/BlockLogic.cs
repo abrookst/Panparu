@@ -143,16 +143,7 @@ public class BlockLogic : MonoBehaviour
         }
         
         //Harddrop
-        if (Input.GetMouseButton(0) || Input.GetKey(KeyCode.DownArrow) || Input.GetKey(KeyCode.S)) {
-            if (fallTimer > MinigameManager.fallTime) {
-                gameObject.transform.localPosition += new Vector3(0, -2, 0);
-                if (!CheckValid()) {
-                    gameObject.transform.localPosition += new Vector3(0, 2, 0);
-                    BlockLanded();
-                }
-                fallTimer = 0;
-            }
-        } else {
+        if (MinigameManager.curMode == MinigameManager.ControlMode.mobile) {
             if (dropTimer > MinigameManager.dropTime) {
                 gameObject.transform.localPosition += new Vector3(0, -2, 0);
                 if (!CheckValid()) {
@@ -160,6 +151,26 @@ public class BlockLogic : MonoBehaviour
                     BlockLanded();
                 }
                 dropTimer = 0;
+            }
+        } else {
+            if (Input.GetMouseButton(0) || Input.GetKey(KeyCode.DownArrow) || Input.GetKey(KeyCode.S)) {
+                if (fallTimer > MinigameManager.fallTime) {
+                    gameObject.transform.localPosition += new Vector3(0, -2, 0);
+                    if (!CheckValid()) {
+                        gameObject.transform.localPosition += new Vector3(0, 2, 0);
+                        BlockLanded();
+                    }
+                    fallTimer = 0;
+                }
+            } else {
+                if (dropTimer > MinigameManager.dropTime) {
+                    gameObject.transform.localPosition += new Vector3(0, -2, 0);
+                    if (!CheckValid()) {
+                        gameObject.transform.localPosition += new Vector3(0, 2, 0);
+                        BlockLanded();
+                    }
+                    dropTimer = 0;
+                }
             }
         }
         
