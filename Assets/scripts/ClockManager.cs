@@ -48,7 +48,7 @@ public class ClockManager : MonoBehaviour
             }
             day = true;
         }
-        ageDisplay.text = Mathf.FloorToInt((float)(Panparu.Instance.lastTimeCheckCare - Panparu.Instance.birthTime).TotalDays).ToString() + " D\n" + Mathf.FloorToInt((float)(Panparu.Instance.lastTimeCheckCare - Panparu.Instance.birthTime).TotalHours).ToString() + " H";
+        ageDisplay.text = Mathf.FloorToInt((float)(Panparu.Instance.lastTimeCheckCare - Panparu.Instance.birthTime).TotalDays).ToString() + " D\n" + Mathf.FloorToInt((float)(Panparu.Instance.lastTimeCheckCare - Panparu.Instance.birthTime).Hours).ToString() + " H";
     }
     //night bgr 6461c2, day bgr f0dab1
     
