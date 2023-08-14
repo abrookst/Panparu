@@ -4,8 +4,10 @@ using UnityEngine;
 using System;
 using UnityEngine.UI;
 using Random = UnityEngine.Random;
+#if UNITY_ANDROID
 using Unity.Notifications.Android;
 using UnityEngine.Android;
+#endif
 
 public class Panparu : MonoBehaviour
 {
@@ -68,6 +70,7 @@ public class Panparu : MonoBehaviour
 
     public bool initialized = false;
 
+    #if UNITY_ANDROID
     private AndroidNotificationChannel channel = new AndroidNotificationChannel()
     {
         Id = "channel_id",
@@ -77,7 +80,7 @@ public class Panparu : MonoBehaviour
     };
 
     private AndroidNotification notification = new AndroidNotification("Your Panparu Misses You!", "Hello! Don't forget to check on your panparu!", System.DateTime.Now);
-
+    #endif
     public int GetFood(){
         return food;
     }
@@ -108,12 +111,14 @@ public class Panparu : MonoBehaviour
         m_Animator = gameObject.GetComponent<Animator>();
         m_Animator.enabled = true;
 
+        #if UNITY_ANDROID
         if (!Permission.HasUserAuthorizedPermission("android.permission.POST_NOTIFICATIONS"))
         {
             Permission.RequestUserPermission("android.permission.POST_NOTIFICATIONS");
         }
-
+        
         AndroidNotificationCenter.RegisterNotificationChannel(channel);
+        #endif
 
         UpdateCurrentCare();
 
@@ -266,7 +271,9 @@ public class Panparu : MonoBehaviour
                 if (attention > 0)
                     attention -= 1;
                 lastTimeAttention = lastTimeAttention.Add(attentionCooldown);
+#if UNITY_ANDROID
                 AndroidNotificationCenter.SendNotification(notification, "channel_id");
+#endif
             }
 
             if (timeSincePlay.CompareTo(playCooldown) >= 0)
