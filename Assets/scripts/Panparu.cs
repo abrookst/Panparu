@@ -142,7 +142,7 @@ public class Panparu : MonoBehaviour
         }
         else
         {
-            if (highscore >= 10000) {
+            if (highscore >= 5000) {
                 sprRdr.sprite = adultSpritesFromGood[3];
             }
             //Calculate what sprite it should have based on how it was treated in the egg and as a child
@@ -449,21 +449,7 @@ public class Panparu : MonoBehaviour
         currentAge = Age.Child;
         babyCare = currentCare;
         lastTimeEvolve = lastTimeCheckCare;
-        switch (babyCare)
-        {
-            case CareType.Good://CG
-                sprRdr.sprite = childSprites[0];
-                print("CG");
-                break;
-            case CareType.Okay://CO
-                sprRdr.sprite = childSprites[1];
-                print("CO");
-                break;
-            case CareType.Bad://CB
-                sprRdr.sprite = childSprites[2];
-                print("CB");
-                break;
-        }
+        RecalcSprite();
     }
     void EvolveFromChildToAdult(){
         if (currentCare == CareType.Dead)
@@ -473,73 +459,7 @@ public class Panparu : MonoBehaviour
         currentAge = Age.Adult;
         childCare = currentCare;
         lastTimeEvolve = lastTimeCheckCare;
-        if (highscore >= 10000) {
-            sprRdr.sprite = adultSpritesFromGood[3];
-            return;
-        }
-        switch (babyCare)
-        {
-            case CareType.Good://CG
-                EvolveFromGoodChildToAdult();
-                break;
-            case CareType.Okay://CO
-                EvolveFromOkayChildToAdult();
-                break;
-            case CareType.Bad://CB
-                EvolveFromBadChildToAdult();
-                break;             
-        }
-    }
-    void EvolveFromGoodChildToAdult(){
-        switch (childCare)
-        {
-            case CareType.Good://AGG
-                sprRdr.sprite = adultSpritesFromGood[0];
-                print("AGG");
-                break;
-            case CareType.Okay://AGO
-                sprRdr.sprite = adultSpritesFromGood[1];
-                print("AGO");
-                break;
-            case CareType.Bad://AGB
-                sprRdr.sprite = adultSpritesFromGood[2];
-                print("AGB");
-                break;
-        }
-    }
-    void EvolveFromOkayChildToAdult(){
-        switch (childCare)
-        {
-            case CareType.Good://AOG
-                sprRdr.sprite = adultSpritesFromOkay[0];
-                print("AOG");
-                break;
-            case CareType.Okay://AOO
-                sprRdr.sprite = adultSpritesFromOkay[1];
-                print("AOO");
-                break;
-            case CareType.Bad://AOB
-                sprRdr.sprite = adultSpritesFromOkay[2];
-                print("AOB");
-                break;
-        }
-    }
-    void EvolveFromBadChildToAdult(){
-        switch (childCare)
-        {
-            case CareType.Good://ABG
-                sprRdr.sprite = adultSpritesFromBad[0];
-                print("ABG");
-                break;
-            case CareType.Okay://ABO
-                sprRdr.sprite = adultSpritesFromBad[1];
-                print("ABO");
-                break;
-            case CareType.Bad://ABB
-                sprRdr.sprite = adultSpritesFromBad[2];
-                print("ABB");
-                break;
-        }
+        RecalcSprite();
     }
 
     IEnumerator ShowHappy()
