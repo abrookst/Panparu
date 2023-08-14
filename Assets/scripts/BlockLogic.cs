@@ -88,28 +88,25 @@ public class BlockLogic : MonoBehaviour
     // Update is called once per frame
     void Update() {
         if (!moveable || MinigameManager.Paused) return;
-        if(MinigameManager.curMode != MinigameManager.ControlMode.mobile)
+        if (MinigameManager.curMode == MinigameManager.ControlMode.keyboard)
         {
-            if (MinigameManager.curMode == MinigameManager.ControlMode.keyboard)
+            if (Input.GetMouseButtonDown(0) || Input.GetMouseButtonDown(1))
             {
-                if (Input.GetMouseButtonDown(0) || Input.GetMouseButtonDown(1))
-                {
-                    MinigameManager.curMode = MinigameManager.ControlMode.mouse;
-                }
+                MinigameManager.curMode = MinigameManager.ControlMode.mouse;
             }
-            else
+        }
+        else if (MinigameManager.curMode == MinigameManager.ControlMode.mouse)
+        {
+            if (Input.GetKey(KeyCode.A) || Input.GetKey(KeyCode.LeftArrow) || Input.GetKey(KeyCode.D) || Input.GetKey(KeyCode.RightArrow))
             {
-                if (Input.GetKey(KeyCode.A) || Input.GetKey(KeyCode.LeftArrow) || Input.GetKey(KeyCode.D) || Input.GetKey(KeyCode.RightArrow))
-                {
-                    MinigameManager.curMode = MinigameManager.ControlMode.keyboard;
-                }
+                MinigameManager.curMode = MinigameManager.ControlMode.keyboard;
             }
         }
         
 
         if (moveTimer > MinigameManager.moveTime) {
-            bool left;
-            bool right;
+            bool left = false;
+            bool right = false;
             if (MinigameManager.curMode == MinigameManager.ControlMode.mouse) {
                 float xPos = canvas.transform.InverseTransformPoint(transform.position).x;
                 Vector2 mousePos;
@@ -119,10 +116,14 @@ public class BlockLogic : MonoBehaviour
             } 
             else if(MinigameManager.curMode == MinigameManager.ControlMode.mobile)
             {
-                var touch = Input.GetTouch(0);
-                var touchPos = touch.position;
-                left = touchPos.x < (Screen.width / 2);
-                right = touchPos.x > (Screen.width / 2);
+                try {
+                    Touch touch = Input.GetTouch(0);
+                    var touchPos = touch.position;
+                    left = touchPos.x < (Screen.width / 2);
+                    right = touchPos.x > (Screen.width / 2);
+                } catch (System.Exception e) {
+                    Debug.Log(e);
+                }
             }
             else {
                 left = Input.GetKey(KeyCode.A) || Input.GetKey(KeyCode.LeftArrow);
