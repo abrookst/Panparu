@@ -6,6 +6,7 @@ using TMPro;
 
 public class MinigameManager : MonoBehaviour
 {
+    public enum ControlMode { mouse, keyboard, mobile }
     public RectTransform m_parent;
     public Camera m_camera;
     // private static Canvas canvas;
@@ -27,7 +28,7 @@ public class MinigameManager : MonoBehaviour
     public AudioClip pieceLand;
     public AudioClip lineClear;
     public AudioClip pieceRotate;
-    public static bool KeyboardMode = false;
+    public static ControlMode curMode;
     public static bool Paused = false;
     public static bool IsGameOver = false;
     /// <summary>
@@ -36,6 +37,10 @@ public class MinigameManager : MonoBehaviour
     void Awake()
     {
         Instance = this;
+        if (Application.platform == RuntimePlatform.Android)
+        {
+            curMode = ControlMode.mobile;
+        }
         // canvas = PantrisBorder.transform.parent.parent.GetComponent<Canvas>();
     }
     /// <summary>
@@ -61,6 +66,10 @@ public class MinigameManager : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.Escape)) {
             Paused = !Paused;
             PauseIcon.SetActive(Paused);
+        }
+        if (Application.platform == RuntimePlatform.Android)
+        {
+
         }
         // if (KeyboardMode) {
         //     KeyboardModeInstructions.SetActive(true);
