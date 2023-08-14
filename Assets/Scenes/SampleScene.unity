@@ -494,7 +494,7 @@ MonoBehaviour:
   - {fileID: 21300000, guid: 5c1828319aede324194c16aca213c203, type: 3}
   - {fileID: 21300000, guid: f7603a3be04174c46a1dc93cbff1d948, type: 3}
   - {fileID: 21300000, guid: a59599b222237e64899e7a3775071d9e, type: 3}
-  - {fileID: 21300000, guid: 0fcaa9f40f3045d418d5146a3d15bbff, type: 3}
+  - {fileID: 21300000, guid: 96f93ea2386a4d147bfbe7c19ec61231, type: 3}
   adultSpritesFromOkay:
   - {fileID: 21300000, guid: 858ed8d56b404114583da35b4f7a2a5f, type: 3}
   - {fileID: 21300000, guid: df2e70c9337b81949902dc15901ba1b4, type: 3}
