@@ -79,7 +79,7 @@ public class Panparu : MonoBehaviour
         Description = "Generic notifications",
     };
 
-    private AndroidNotification notification = new AndroidNotification("Your Panparu Misses You!", "Hello! Don't forget to check on your panparu!", System.DateTime.Now);
+    private AndroidNotification notification = new AndroidNotification("Your Panparu Misses You!", "Hello! Don't forget to check on your panparu!", System.DateTime.Now + TimeSpan.FromHours(12));
     #endif
     public int GetFood(){
         return food;
