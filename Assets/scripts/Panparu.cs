@@ -79,7 +79,7 @@ public class Panparu : MonoBehaviour
         Description = "Generic notifications",
     };
 
-    private AndroidNotification notification = new AndroidNotification("Your Panparu Misses You!", "Hello! Don't forget to check on your panparu!", System.DateTime.Now + TimeSpan.FromHours(12));
+    private AndroidNotification notification = new AndroidNotification("Your Panparu Misses You!", "Hello! Don't forget to check on your panparu!", System.DateTime.Now + TimeSpan.FromSeconds(12), TimeSpan.FromSeconds(12));
     #endif
     public int GetFood(){
         return food;
@@ -132,6 +132,11 @@ public class Panparu : MonoBehaviour
         {
            Button_Functions.Instance.Pet();
         }
+
+        #if UNITY_ANDROID
+        AndroidNotificationCenter.CancelAllNotifications();
+        AndroidNotificationCenter.SendNotification(notification, "channel_id");
+        #endif
     }
 
     public void RecalcSprite()
@@ -271,9 +276,6 @@ public class Panparu : MonoBehaviour
                 if (attention > 0)
                     attention -= 1;
                 lastTimeAttention = lastTimeAttention.Add(attentionCooldown);
-#if UNITY_ANDROID
-                AndroidNotificationCenter.SendNotification(notification, "channel_id");
-#endif
             }
 
             if (timeSincePlay.CompareTo(playCooldown) >= 0)
